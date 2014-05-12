@@ -1,0 +1,23 @@
+{
+  "name": "p2",
+  "version": "0.0.1",
+  "main": "app.js",
+  "authors": [
+    "b3n0n"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.0.3",
+    "underscore": "1.6.0",
+    "angular": "1.2.0",
+    "angular-route": "1.2.0",
+    "bootstrap-sass": "3.0.2",
+    "font-awesome":"4.0.3"
+  }
+}
