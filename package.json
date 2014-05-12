@@ -1,9 +1,9 @@
 {
-  "name": "h2o",
-  "version": "0.0.2",
+  "name": "sandflake",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/b3n0n/p2.git"
+    "url": "https://github.com/b3n0n/sandfalke.git"
   },
   "private": true,
   "engines": {
