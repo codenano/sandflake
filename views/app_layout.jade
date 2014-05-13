@@ -19,27 +19,28 @@ html(ng-app='sandflake')
               Toggle navigation
              span(class='icon-bar')
           a(id='logoapp' class='navbar-brand logoapp')
-        div(class='collapse navbar-collapse navbar-responsive-collapse' id='upnav')
+        div(class='collapse navbar-collapse' id='upnav')
           ul(id='menu_list' class='nav navbar-nav')
           ul(class='nav navbar-nav navbar-right')
-           li.dropdown
-            a#loggedInfo.navbar-link
+            li.dropdown
+             a#loggedInfo.navbar-link
       #loadCont
         #load
-      block content
       #meatlaunch.kudos
-      nav(class='navbar navbar-default navbar-fixed-bottom' role='navigation')
+      block content
+      nav(id='downnav' class='navbar navbar-default navbar-fixed-bottom' role='navigation')
         .container-fluid
             .navbar-header
               button(id='subnavCollapse' type='button' class='navbar-toggle' data-toggle='collapse' data-target='#subnav')
                 .sr-only
                   Toggle navigation
                  span(class='icon-bar')
-            div(class='collapse nav-collapse navbar-responsive-collapse' id='subnav')
+            div(class='collapse nav-collapse' id='subnav')
+              ul(class='nav navbar-nav')
               ul(id='subnavCont' class='nav navbar-nav navbar-right')
-                 li#meatlist.dropdown
-                  a.navbar-link.dropdown-toggle(data-toggle='dropdown')
-                  ul#meatList.dropdown-menu
+                  li#meatlist.dropdown
+                   a.navbar-link.dropdown-toggle(data-toggle='dropdown')
+                   ul#meatList.dropdown-menu
     script(src='/scripts/dist/sandflake.min.js')
     script(src='/scripts/directives.js')
     script(src='/scripts/base/kudos.js')

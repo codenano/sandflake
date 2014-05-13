@@ -16,10 +16,19 @@ angular.module('sandflake.controllers', [
     $scope.$rota = $('#load');
     $scope.degree = 0;
     $scope.timer;
+    $scope.redraw = function()
+       {
+       $('#meatList').css({ height: window.innerHeight});
+       $('#upnav').css({width:window.innerWidth+'px'});
+       $('#subnav').css({width:window.innerWidth+'px'});
+       $('#meatlaunch').css({position:'absolute'});
+       };
+    $scope.debouncedRedraw = _.debounce($scope.redraw, 100);
+    $(window).on('resize', $scope.debouncedRedraw);
     $('#subnavCollapse').css('display', 'none');
     $('#subnavCollapse').on('click', function(e){
-            e.preventDefault();
-            e.stopImmediatePropagation();
+        e.preventDefault();
+        e.stopImmediatePropagation();
     });
     $scope.rotate = function() {
         $scope.$rota.css({ transform: 'rotate(' + $scope.degree + 'deg)'});
@@ -60,35 +69,36 @@ angular.module('sandflake.controllers', [
            if ($rootScope.uname !== 'alien') {
               $('#meatlist').find('.dropdown-toggle').dropdown('toggle');
               if (res === 'on') {
-                $('body').addClass('hiddenOverflow');
+                 //$('body').addClass('hiddenOverflow');
                  $('#subnav').addClass('in');
-                 $rootScope.socket.send(JSON.stringify({
+                 $('#meatList').addClass('animated bounceInRight');
+/*                 $rootScope.socket.send(JSON.stringify({
                    room: 'main',
                    type: 'join'
-                 }));
+                 }));*/
                  }
               else {
-                   $rootScope.socket.send(JSON.stringify({
+                   $('#meatList').removeClass('animated bounceInRight');
+                   $('#subnav').removeClass('in');
+/*                   $rootScope.socket.send(JSON.stringify({
                      room: 'main',
                      type: 'leave'
-                   }));
-                   $('body').removeClass('hiddenOverflow');
-                   $('#subnav').removeClass('in');
-                   
+                   }));*/
+                   //$('body').removeClass('hiddenOverflow');
                    }
               }
            else
               if (res === 'on')
-                    $scope.$apply(function(){
-                     $location.path("/login");
-                    });
+                 $scope.$apply(function(){
+                  $location.path("/login");
+                 });
               else
-                $scope.$apply(function(){
-                 $location.path("/");
-                });
-           console.log('the light is '+res);
+                 $scope.$apply(function(){
+                  $location.path("/");
+                 });
+       console.log('the light is '+res);
        });
-      $('#meatlist').on('shown.bs.dropdown', function () {
+    $('#meatlist').on('shown.bs.dropdown', function () {
       $('#meatList').css({ height: window.innerHeight});
     });
     $('#meatlist').on('hide.bs.dropdown', function (e) {
@@ -228,17 +238,19 @@ angular.module('sandflake.controllers', [
                case 'twt_up':
                      console.log(data);
                break;
-               case 'room:reject':
-                     var log = data.response;
-                     $('#meatList').empty();
-                     $('#meatList').append('<p style="color:red;">You have a client conected biatch</p>');
-               break;
                case 'room:read':
                      console.log(data.response);
                      $('#meatList').empty();
                      _.each(data.response, function(item){
-                       $('#meatList').append('<li role="presentation"><a role="menuitem"><img src="images/icons/icon-16.png" />'+item+'</a></li>');
+                       $('#meatList').append('<li class="meatItem" role="presentation"><a role="menuitem"><img src="images/icons/icon-16.png" />'+item+'</a></li>');
+                       $('.meatItem').last().on('click', function(e){
+                        $scope.$apply(function(){
+                           $location.path('/meat/'+item);
+                           //$('#myTabContent').find('#home').html('pupiloo');
+                        });
+                       })
                      });
+                     
                      
                break;
                case 'meat':
