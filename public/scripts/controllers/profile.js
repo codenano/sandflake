@@ -57,7 +57,7 @@ angular.module('sandflake.profile', []).
          $("body").css('overflow', 'auto');
         });
         //$('.container-app').show();
-        $('.panel').css({ transform: 'rotate(0deg)'});
+        $('.panel').addClass('animated bounceInRight');
         var log = {
           type: 'profile:get',
           uname: $rootScope.uname

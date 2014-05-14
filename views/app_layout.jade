@@ -23,7 +23,8 @@ html(ng-app='sandflake')
           ul(id='menu_list' class='nav navbar-nav')
           ul(class='nav navbar-nav navbar-right')
             li.dropdown
-             a#loggedInfo.navbar-link
+             a#loggedBar.navbar-link.dropdown-toggle(data-toggle="dropdown")
+             ul#loggedInfo.dropdown-menu.dropdown-menu                         
       #loadCont
         #load
       #meatlaunch.kudos

@@ -1,10 +1,6 @@
   <div class="message-content">
-      <input name="message" ng-keyup="parsekey($event)" id="meatmsg" maxlength="250" autocomplete="off" placeholder="Enviar Mensaje"/>
+      <textarea name="message" ng-keyup="parsekey($event)" id="meatmsg" class="form-control" maxlength="250" autocomplete="off" placeholder="Message..."></textarea>
       <input type="hidden" name="_csrf" value="#{csrf}"/>
       <input type="hidden" name="fingerprint" id="fp"/>
       <input type="hidden" name="userid" id="userid"/>
   </div>
-      <div id="add-chat-blocker">
-        <span>Cargando!...</span>
-      </div>
-  <i id="counter" class="badge">250</i>

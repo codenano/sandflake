@@ -14,9 +14,6 @@ angular.module('sandflake.root', []).
        callback((pssw.length >= 3));
        };
      $scope.init = function(){
-       $rootScope.start = false;
-       $rootScope.loading();
-       $('.panel').css({ transform: 'rotate(0deg)'});
        switch($location.path()) {
                      case '/signup':
                        document.getElementById('singup_email').focus();
@@ -157,6 +154,9 @@ angular.module('sandflake.root', []).
                        console.log($location.path());
                      break;
                      }
+        $rootScope.start = false;
+        $rootScope.loading();
+        $('.panel').addClass('animated bounceInDown');             
 				};
      $scope.intervalLoad = setInterval(function(){
        if ($rootScope.state === 'start') {

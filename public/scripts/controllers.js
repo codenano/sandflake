@@ -193,15 +193,21 @@ angular.module('sandflake.controllers', [
                       $rootScope.menuItems = data.menu;
                       $rootScope.sid = data.sid;
                       var loggedInfo = document.getElementById('loggedInfo');
+                      var loggedBar = document.getElementById('loggedBar');
                       if ($rootScope.uname !== 'alien') {
-                          $(loggedInfo).empty();
-                          $(loggedInfo).append('<i class="fa fa-power-off"></i>');
+                          //$(loggedInfo).empty();
+                           $(loggedBar).append('<i class="fa fa-power-off"></i>');
+                          $(loggedInfo).append('<li role="presentation"><a role="menuitem"><i class="fa fa-sign-out"></i> Exit</a><li>');
                           $(loggedInfo).on('click', function(){
-                          auth.logout();
-                          });
+                            auth.logout();
+                            });
+                          $(loggedBar).on('click', function(){
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+                            });
                          }
                       else {
-                          $(loggedInfo).empty();
+                          $(loggedBar).empty().hide();
                          }
                       $rootScope.loadMenu();
                       $rootScope.state = 'start';
@@ -251,6 +257,10 @@ angular.module('sandflake.controllers', [
                        $('.meatItem').last().on('click', function(e){
                         $scope.$apply(function(){
                            var log = btoa(item+':'+$rootScope.uname);
+                           if (window.innerWidth<768) {
+                              $('#subnav').removeClass('in');
+                              $rootScope.meatLaunch.turnOff();
+                            }
                            $location.path('/meat/'+log);
                            //$('#myTabContent').find('#home').html('pupiloo');
                         });
@@ -261,7 +271,7 @@ angular.module('sandflake.controllers', [
                break;
                case 'meat':
                      console.log($location.path());
-                     $('#meatMsgs').append('<li>'+data.user+':'+data.msg+'</li>')
+                     $('#meatMsgs').append('<li class="list-group-item">'+data.user+':'+data.msg+'</li>')
                break;
                case 'sign_out':
                      if (data.uname === $rootScope.uname)

@@ -12,7 +12,6 @@ run(function ($rootScope, $http, $location) {
   var host = window.location.hostname;
   var port = window.location.port;
   console.log(host);
-  $rootScope.app = 'sandflake';
   if (port === 80)
      $rootScope.socket = new WebSocket('ws://' + host);
   else
