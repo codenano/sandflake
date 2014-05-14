@@ -2,6 +2,7 @@
 angular.module('sandflake.meat', []).
   controller('meat', function ($rootScope, $scope, $location, $http, $routeParams){
      $scope.id = $routeParams.id;
+     $scope.room = atob($scope.id);
      $scope.init = function(){
         console.log('load start:'+atob($scope.id));
         $rootScope.start = false;

@@ -261,8 +261,7 @@ angular.module('sandflake.controllers', [
                break;
                case 'meat':
                      console.log($location.path());
-                     if ($location.path() === '/meat/room')
-                        $('#meatMsgs').append('<li>'+data.user+':'+data.msg+'</li>')
+                     $('#meatMsgs').append('<li>'+data.user+':'+data.msg+'</li>')
                break;
                case 'sign_out':
                      if (data.uname === $rootScope.uname)
