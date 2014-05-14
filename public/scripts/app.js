@@ -15,7 +15,7 @@ run(function ($rootScope, $http, $location) {
   if (port === 80)
      $rootScope.socket = new WebSocket('ws://' + host);
   else
-     $rootScope.socket = new WebSocket('ws://' + host+ ':'+ port);
+     $rootScope.socket = new WebSocket('ws://' + host);
 }).
 config(function ($routeProvider, $locationProvider) {
   $routeProvider
