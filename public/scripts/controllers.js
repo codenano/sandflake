@@ -72,10 +72,6 @@ angular.module('sandflake.controllers', [
                  //$('body').addClass('hiddenOverflow');
                  $('#subnav').addClass('in');
                  $('#meatList').addClass('animated bounceInRight');
-/*                 $rootScope.socket.send(JSON.stringify({
-                   room: 'main',
-                   type: 'join'
-                 }));*/
                  }
               else {
                    $('#meatList').removeClass('animated bounceInRight');
@@ -100,6 +96,10 @@ angular.module('sandflake.controllers', [
        });
     $('#meatlist').on('shown.bs.dropdown', function () {
       $('#meatList').css({ height: window.innerHeight});
+      $rootScope.socket.send(JSON.stringify({
+        room: 'main',
+        type: 'join'
+      }));
     });
     $('#meatlist').on('hide.bs.dropdown', function (e) {
       e.preventDefault();
@@ -238,6 +238,11 @@ angular.module('sandflake.controllers', [
                case 'twt_up':
                      console.log(data);
                break;
+               case 'room:reject':
+                     var log = data.response;
+                     $('#meatList').empty();
+                     $('#meatList').append('<p style="color:red;">You have a client conected</p>');
+               break;
                case 'room:read':
                      console.log(data.response);
                      $('#meatList').empty();
@@ -245,7 +250,8 @@ angular.module('sandflake.controllers', [
                        $('#meatList').append('<li class="meatItem" role="presentation"><a role="menuitem"><img src="images/icons/icon-16.png" />'+item+'</a></li>');
                        $('.meatItem').last().on('click', function(e){
                         $scope.$apply(function(){
-                           $location.path('/meat/'+item);
+                           var log = btoa(item+':'+$rootScope.uname);
+                           $location.path('/meat/'+log);
                            //$('#myTabContent').find('#home').html('pupiloo');
                         });
                        })

@@ -3,7 +3,7 @@ angular.module('sandflake.meat', []).
   controller('meat', function ($rootScope, $scope, $location, $http, $routeParams){
      $scope.id = $routeParams.id;
      $scope.init = function(){
-        console.log('load start:'+$scope.section);
+        console.log('load start:'+atob($scope.id));
         $rootScope.start = false;
         $rootScope.loading();
         $('.panel').css({ transform: 'rotate(0deg)'});
