@@ -18,7 +18,7 @@ angular.module('sandflake.root', []).
      $scope.init = function(){
        switch($location.path()) {
                      case '/signup':
-                       document.getElementById('singup_email').focus();
+                       //document.getElementById('singup_email').focus();
                        $scope.singup_email_v = false;
                        $scope.singup_pssw_v = false;
                        $scope.signUp = function() {
