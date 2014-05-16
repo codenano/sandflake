@@ -15,7 +15,7 @@ angular.module('sandflake.root', []).
      $scope.validateUname = function(pssw, callback) {
        callback((pssw.length >= 3));
        };
-     $scope.init = function(){      
+     $scope.init = function(){
        switch($location.path()) {
                      case '/signup':
                        document.getElementById('singup_email').focus();
@@ -84,7 +84,7 @@ angular.module('sandflake.root', []).
                           };
                      break;
                      case '/login':
-                       document.getElementById('singin_email').focus();
+                       //document.getElementById('singin_email').focus();
                        $scope.singin_email_v = false;
                        $scope.singin_pssw_v = false;
                        $scope.signIn = function() {
@@ -157,13 +157,12 @@ angular.module('sandflake.root', []).
                      }
         $rootScope.start = false;
         $rootScope.loading();
-        $('.panel').addClass('animated bounceInDown');             
+        $('.panel').addClass('animated bounceInDown');
 				};
      $scope.intervalLoad = setInterval(function(){
        if ($rootScope.state === 'start') {
           clearInterval($scope.intervalLoad);
           $scope.init();
-          //$rootScope.loading();
           }
        },100);
     });
