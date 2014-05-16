@@ -25,9 +25,9 @@ module.exports = function (app, h2o) {
   app.get('/profile', h2o.isLoggedIn, function (req, res) {
     console.log('shuldjapass'+req.session.uname);
     if (req.session.uname === 'alien')
-       res.render('app');
-    else
        res.redirect('/');
+    else
+       res.render('app');
   });
   app.get('/meat/:id', h2o.isLoggedIn, function (req, res) {
     if (req.session.uname === 'alien')

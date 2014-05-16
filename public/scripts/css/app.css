@@ -11,7 +11,9 @@ body {
 .hiddenOverflow {
   overflow-y:hidden;
 }
-
+.container-app {
+  display:none;
+}
 
 
 /*
@@ -48,6 +50,7 @@ Tabs
 }
 
 #meatlaunch {
+  display:none;
   position: fixed;
   bottom: 0;
   right: 0;
@@ -102,7 +105,21 @@ Tabs
   margin:0;
 }
 #loggedInfo {
+  height:60px;
   cursor:pointer;
+}
+#loggedInfo li a{
+  padding-top: 1em;
+  margin:0;
+  font-size: 1.2em;
+  position:absolute;
+  height:60px;
+  width: 80%;
+  left: 1em;
+  top: 0;
+}
+#loggedInfo li a:hover{
+  background-color: #ccc;
 }
 #launchProfileEdit {
   font-size:22px;
@@ -164,7 +181,7 @@ overflow-y:auto;
   left:0;
   right:0;
   z-index:1050;
-  background-color: rgba(255,255,255,0.35);
+  background-color: rgba(255,255,255,0.6);
   -moz-transition: all 1s;
 -webkit-transition: all 1s;
 -ms-transition: all 1s;
@@ -190,11 +207,6 @@ transition: all 1s;
 transition: all 1s;
 }
 .panel {
-   -webkit-transform: rotateY(90deg);
-   -moz-transform: rotateY(90deg);
-   -ms-transform: rotateY(90deg);
-   -o-transform: rotateY(90deg);
-   transform: rotateY(90deg);
       -moz-transition: all 600ms;
    -webkit-transition: all 600ms;
    -ms-transition: all 600ms;
@@ -210,8 +222,14 @@ transition: all 1s;
 .navbar-default {
 background-color:rgba(255,255,255,0.4);
 }
-
-
+#loggedBar {
+  float:right;
+  padding-right: 30px;
+  cursor:pointer;
+}
+#menu_list {
+  float:left;
+}
 #menu_list li a {
 
 -moz-transition: all 1s;
@@ -220,10 +238,14 @@ background-color:rgba(255,255,255,0.4);
 -o-transition: all 1s;
 transition: all 1s;
 }
+#menu_list li {
+ float:left;
+}
 #menu_list li a:hover, #menu_list li:hover  {
 cursor:pointer;
 }
 #logoapp {
+  float:left;
     text-indent: -9999px;
     display: inline-block;
     height: 50px;

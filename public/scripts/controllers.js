@@ -11,14 +11,14 @@ angular.module('sandflake.controllers', [
     $scope.load = document.getElementById('load');
     $scope.loadCont = document.getElementById('loadCont');
     $rootScope.heartbeats = 0;
-    $rootScope.currentRoom = '';
     $scope.currentLink = $scope.homeLink;
     $scope.$rota = $('#load');
     $scope.degree = 0;
     $scope.timer;
     $scope.redraw = function()
        {
-       $('#meatList').css({ height: window.innerHeight});
+       $('#meatList').css({ height: window.innerHeight+'px'});
+       $('#meatMsgs').css({ height: window.innerHeight-355+'px'});
        $('#upnav').css({width:window.innerWidth+'px'});
        $('#subnav').css({width:window.innerWidth+'px'});
        $('#meatlaunch').css({position:'absolute'});
@@ -41,16 +41,18 @@ angular.module('sandflake.controllers', [
     $rootScope.loading = function(){
       if ($rootScope.start) {
          $rootScope.start = false;
-         $rootScope.menuList.style.display = 'none';
-         $scope.homeLink.style.display = 'none';
+         $('.container-app').hide();
+         //$rootScope.menuList.style.display = 'none';
+         //$scope.homeLink.style.display = 'none';
          $scope.loadCont.style.display = 'block';
          $scope.rotate();    // run it!
          }
       else {
          clearTimeout($scope.timer);
+         $('.container-app').show();
          $rootScope.start = true;
-         $rootScope.menuList.style.display = 'block';
-         $scope.homeLink.style.display = 'block';
+         //$rootScope.menuList.style.display = 'block';
+         //$scope.homeLink.style.display = 'block';
          $scope.loadCont.style.display = 'none';
          }
     };
@@ -66,7 +68,6 @@ angular.module('sandflake.controllers', [
            gamma : 'fa fa-bolt'
          }
        }, function(res){
-           if ($rootScope.uname !== 'alien') {
               $('#meatlist').find('.dropdown-toggle').dropdown('toggle');
               if (res === 'on') {
                  //$('body').addClass('hiddenOverflow');
@@ -82,29 +83,13 @@ angular.module('sandflake.controllers', [
                    }));*/
                    //$('body').removeClass('hiddenOverflow');
                    }
-              }
-           else
-              if (res === 'on')
-                 $scope.$apply(function(){
-                  $location.path("/login");
-                 });
-              else
-                 $scope.$apply(function(){
-                  $location.path("/");
-                 });
-       console.log('the light is '+res);
        });
     $('#meatlist').on('shown.bs.dropdown', function () {
       $('#meatList').css({ height: window.innerHeight});
-      $rootScope.socket.send(JSON.stringify({
-        room: 'main',
-        type: 'join'
-      }));
     });
     $('#meatlist').on('hide.bs.dropdown', function (e) {
       e.preventDefault();
       e.stopImmediatePropagation();
-      console.log('hide');
     });
     $('#logoapp').on('click', function(){
         $scope.$apply(function(){
@@ -192,21 +177,36 @@ angular.module('sandflake.controllers', [
                       console.log(data.uname);
                       $rootScope.menuItems = data.menu;
                       $rootScope.sid = data.sid;
+                      var loginfo = document.getElementById('loginfo');
+                      var logoapp = document.getElementById('logoapp');
+                      var menuList = document.getElementById('menu_list');
                       var loggedInfo = document.getElementById('loggedInfo');
                       var loggedBar = document.getElementById('loggedBar');
+                      var ml = document.getElementById('meatlaunch');
                       if ($rootScope.uname !== 'alien') {
+                          $rootScope.socket.send(JSON.stringify({
+                            room: 'main',
+                            type: 'join'
+                          }));
                           //$(loggedInfo).empty();
+                          $(ml).show();
+                          $(loggedBar).empty();
                            $(loggedBar).append('<i class="fa fa-power-off"></i>');
                           $(loggedInfo).append('<li role="presentation"><a role="menuitem"><i class="fa fa-sign-out"></i> Exit</a><li>');
                           $(loggedInfo).on('click', function(){
                             auth.logout();
                             });
-                          $(loggedBar).on('click', function(){
-                            e.preventDefault();
-                            e.stopImmediatePropagation();
-                            });
+                          $(loginfo).on('shown.bs.dropdown', function () {
+                            $(logoapp).addClass('hidden');
+                            $(menuList).addClass('hidden');                            
+                          });  
+                          $(loginfo).on('hidden.bs.dropdown', function () {
+                            $(logoapp).removeClass('hidden');
+                            $(menuList).removeClass('hidden');                           
+                          });  
                          }
                       else {
+                          $(ml).hide();
                           $(loggedBar).empty().hide();
                          }
                       $rootScope.loadMenu();
@@ -232,7 +232,7 @@ angular.module('sandflake.controllers', [
                      $scope.singin_pssw = document.getElementById('singin_pssw');
                      $scope.user_signin = document.getElementById('user_signin');
                      $scope.singin_pssw.value = '';
-                     $scope.singin_pssw.parentNode.childNodes[1].innerHTML = 'Contraseña';
+                     //$scope.singin_pssw.parentNode.childNodes[1].innerHTML = 'Contraseña';
                      $scope.singin_pssw.parentNode.className = 'form-group';
                      $scope.user_signin.disabled = true;
                      $rootScope.loading();
@@ -253,10 +253,12 @@ angular.module('sandflake.controllers', [
                      console.log(data.response);
                      $('#meatList').empty();
                      _.each(data.response, function(item){
+                      if (item!=$rootScope.uname) {
                        $('#meatList').append('<li class="meatItem" role="presentation"><a role="menuitem"><img src="images/icons/icon-16.png" />'+item+'</a></li>');
                        $('.meatItem').last().on('click', function(e){
                         $scope.$apply(function(){
-                           var log = btoa(item+':'+$rootScope.uname);
+                           var monoid = [$rootScope.uname, item].sort();
+                           var log = encodeURI(btoa(monoid[0]+':'+monoid[1]));
                            if (window.innerWidth<768) {
                               $('#subnav').removeClass('in');
                               $rootScope.meatLaunch.turnOff();
@@ -264,14 +266,14 @@ angular.module('sandflake.controllers', [
                            $location.path('/meat/'+log);
                            //$('#myTabContent').find('#home').html('pupiloo');
                         });
-                       })
+                       });
+                       }
                      });
-                     
-                     
                break;
                case 'meat':
                      console.log($location.path());
-                     $('#meatMsgs').append('<li class="list-group-item">'+data.user+':'+data.msg+'</li>')
+                     $('#meatMsgs').append('<li class="list-group-item">'+data.user+':'+data.msg+'</li>');
+                     $('#meatMsgs').scrollTop($('#meatMsgs').prop('scrollHeight'));
                break;
                case 'sign_out':
                      if (data.uname === $rootScope.uname)
@@ -330,7 +332,6 @@ angular.module('sandflake.controllers', [
                   if ($scope.pic.src === '')
                      $scope.pic.src = data.response.pic;
                   console.log($scope.uname.value);
-                  $rootScope.loading();
                break;
                }
               }

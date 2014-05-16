@@ -1,11 +1,20 @@
 'use strict';
 angular.module('sandflake.meat', []).
   controller('meat', function ($rootScope, $scope, $location, $http, $routeParams){
-     $scope.id = $routeParams.id;
-     $scope.room = atob($scope.id);
+     $scope.roomId = $routeParams.id;
+     $scope.room = atob(decodeURI($scope.roomId));    
+     $scope.$on('$routeChangeStart', function(event, current, previous, rejection) {
+      $('body, html').css({overflowY:'auto'});
+        var log = {
+        room: $scope.roomId,
+        type: 'leave'
+        };
+      $rootScope.socket.send(JSON.stringify(log));
+     });     
      $rootScope.loading();
      $scope.init = function(){
-        console.log('load start:'+atob($scope.id));
+        console.log('load start:'+atob($scope.roomId));
+        $('body, html').css({overflowY:'hidden'});
         $('#meatMsgs').css({height: (window.innerHeight-370).toString()+'px', overflowY: 'scroll'});
         $('#meatmsg').focus(function(){
           $(this).css({height: '80px'});
@@ -14,7 +23,6 @@ angular.module('sandflake.meat', []).
           $(this).css({height: '50px'});
         });
         $('#meatmsg').keypress(function(e){
-          console.log(e);
           if ((e.charCode === 13)||(e.keyCode === 13)) {
              $scope.sendMeat();
              return false;
@@ -25,15 +33,19 @@ angular.module('sandflake.meat', []).
         $('.panel').addClass('animated bounceInRight');
 				};
       $scope.sendMeat = function(e){
-        $rootScope.socket.send(JSON.stringify({type: 'meat', room: 'main', msg: $('#meatmsg').val(), user: $rootScope.uname}));
+        $rootScope.socket.send(JSON.stringify({type: 'meat', room: $scope.roomId, msg: $('#meatmsg').val(), user: $rootScope.uname}));
         $('#meatmsg').val('');
-
         };
      $scope.intervalLoad = setInterval(function(){
        if ($rootScope.state === 'start') {
           clearInterval($scope.intervalLoad);
-          if ($rootScope.uname !== 'alien')
+          if ($rootScope.uname !== 'alien') {
+             $rootScope.socket.send(JSON.stringify({
+                room: $scope.roomId,
+                type: 'join'
+                })); 
              $scope.init();
+             }
           else
              $scope.$apply(function(){
                $location.path("/");
