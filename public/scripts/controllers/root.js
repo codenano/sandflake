@@ -1,8 +1,6 @@
 'use strict';
 angular.module('sandflake.root', []).
-  controller('root', function ($rootScope, $scope, $location, $http, $routeParams){
-     $scope.module = $routeParams.module;
-     $scope.section = $routeParams.section;
+  controller('root', function ($rootScope, $scope, $location, $http){
      $rootScope.start = true;
      $rootScope.loading();
      $scope.validateEmail = function(email, callback) {
@@ -149,11 +147,6 @@ angular.module('sandflake.root', []).
                              });
                           };
                      break;
-                     case '/':
-                     break;
-                     default:
-                       console.log($location.path());
-                     break;
                      }
         $rootScope.start = false;
         $rootScope.loading();
@@ -162,7 +155,12 @@ angular.module('sandflake.root', []).
      $scope.intervalLoad = setInterval(function(){
        if ($rootScope.state === 'start') {
           clearInterval($scope.intervalLoad);
-          $scope.init();
+          if ($rootScope.uname === 'alien')
+             $scope.init();
+          else
+             $scope.$apply(function(){
+               $location.path("/");
+             });
           }
        },100);
     });

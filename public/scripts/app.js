@@ -20,8 +20,8 @@ run(function ($rootScope, $http, $location) {
 config(function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
-      controller: 'root',
-      templateUrl: 'partials/root.html'
+      controller: 'app',
+      templateUrl: 'partials/app.html'
     })
     .when('/signup', {
       controller: 'root',
@@ -42,6 +42,10 @@ config(function ($routeProvider, $locationProvider) {
     .when('/signout', {
       controller: 'root',
       templateUrl: 'partials/root.html'
+    })
+    .when('/app/:appNamed', {
+      controller: 'app',
+      templateUrl: 'partials/app.html'
     })
     .otherwise({
       redirectTo: '/'

@@ -2,7 +2,7 @@ module.exports = function(app, configurations, express, levelSession, dblvl) {
   //Module dependencies.
   var nconf = require('nconf');
   
-  //var maxAge = 24 * 60 * 60 * 1000 * 28; //4 weeks
+  var maxAge = 24 * 60 * 60 * 1000 * 28; //4 weeks
   var csrf = express.csrf();
   //local conf
   nconf.argv().env().file({ file: 'local.json' });
@@ -15,7 +15,7 @@ module.exports = function(app, configurations, express, levelSession, dblvl) {
     //uses
     app.use(express.static(__dirname + '/public'));
     app.use(express.cookieParser(nconf.get('session_secret')));
-    app.use(levelSession({db: dblvl}));
+    app.use(levelSession({db: dblvl, expire: maxAge}));
     app.use(express.logger());
     app.use(express.json());
     app.use(express.urlencoded());

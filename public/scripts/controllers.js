@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('sandflake.controllers', [
+   'sandflake.app',
    'sandflake.root',
    'sandflake.meat',
    'sandflake.profile'
@@ -13,7 +14,6 @@ angular.module('sandflake.controllers', [
     $rootScope.heartbeats = 0;
     $scope.currentLink = $scope.homeLink;
     $scope.$rota = $('#load');
-    $scope.degree = 0;
     $scope.timer;
     $scope.redraw = function()
        {
@@ -31,12 +31,12 @@ angular.module('sandflake.controllers', [
         e.stopImmediatePropagation();
     });
     $scope.rotate = function() {
-        $scope.$rota.css({ transform: 'rotate(' + $scope.degree + 'deg)'});
         // timeout increase degrees:
-        $scope.timer = setTimeout(function() {
-            ++$scope.degree;
-            $scope.rotate(); // loop it
-        },30);
+        $scope.degree = 0;
+        $scope.timer = setInterval(function() {
+            $scope.degree++;
+            $scope.$rota.css({ transform: 'rotate(' + $scope.degree + 'deg)'});
+        },100);
       };
     $rootScope.loading = function(){
       if ($rootScope.start) {
@@ -48,7 +48,7 @@ angular.module('sandflake.controllers', [
          $scope.rotate();    // run it!
          }
       else {
-         clearTimeout($scope.timer);
+         clearInterval($scope.timer);
          $('.container-app').show();
          $rootScope.start = true;
          //$rootScope.menuList.style.display = 'block';
@@ -198,12 +198,12 @@ angular.module('sandflake.controllers', [
                             });
                           $(loginfo).on('shown.bs.dropdown', function () {
                             $(logoapp).addClass('hidden');
-                            $(menuList).addClass('hidden');                            
-                          });  
+                            $(menuList).addClass('hidden');
+                          });
                           $(loginfo).on('hidden.bs.dropdown', function () {
                             $(logoapp).removeClass('hidden');
-                            $(menuList).removeClass('hidden');                           
-                          });  
+                            $(menuList).removeClass('hidden');
+                          });
                          }
                       else {
                           $(ml).hide();
