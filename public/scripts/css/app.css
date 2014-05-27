@@ -6,174 +6,20 @@ html, body {
   overflow-x:hidden;
 }
 body {
-  background-color: whitesmoke;
+  background: url(/images/bg.jpeg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color:whitesmoke;
+  background-color:whitesmoke;
+  
 }
-.hiddenOverflow {
-  overflow-y:hidden;
+.list-group {
+  margin-bottom:0;
 }
 .container-app {
   display:none;
-}
-
-
-/*
-
-Chat list
-
-*/
-
-#meatMsgs {
-overflow-x:hidden;
-}
-
-/*
-
-Form meat message
-
-*/
-
-#meatmsg {
-   -moz-transition: all 1s;
--webkit-transition: all 1s;
--ms-transition: all 1s;
--o-transition: all 1s;
-transition: all 1s;
-resize: none;
-white-space: nowrap;
-line-height: 50px;
-}
-/*
-
-Tabs
-
-*/
-#myTab li a {
-  cursor:pointer;
-}
-
-#meatlaunch {
-  display:none;
-}
-.meatItem {
-  cursor:pointer;
-}
-/*
- * Kudos
- */
- .modal-backdrop {
-   z-index:1032;
-   background-color:rgba(255,255,255,0.8);
- }
-.kudos {
-  width: 6em;
-  height: 6em;
-  margin:1em;
-  z-index:1031;
-  background-color:rgba(255,255,255,0.0);
-  box-shadow: inset 0 0 0 0.25em silver, inset 0 0 0 1.2em rgba(255,255,255,0.0), inset 0 0 0 6em silver;
-  line-height: 6em;
-  text-align: center;
-  border-radius: 50%;
-  -moz-transition: box-shadow 0.7s ease-in-out 0.1s;
-  -o-transition: box-shadow 0.7s ease-in-out 0.1s;
-  -webkit-transition: box-shadow 0.9s ease-in-out;
-  -webkit-transition-delay: 0.1s;
-  transition: box-shadow 0.9s ease-in-out 0.1s;
-}
-.kudos:before {
-/*  -moz-transition: font-size 0.45s ease-in;
-  -o-transition: font-size 0.45s ease-in;
-  -webkit-transition: font-size 0.45s ease-in;
-  transition: font-size 0.45s ease-in;
-  font-size: 1.75em;
-  color: white;
-  line-height: 3.47826em;*/
-  color:#fff;
-}
-.kudos.active {
-  -moz-transition: box-shadow 0.5s linear;
-  -o-transition: box-shadow 0.5s linear;
-  -webkit-transition: box-shadow 0.5s linear;
-  transition: box-shadow 0.5s linear;
-  box-shadow: inset 0 0 0 0.25em silver, inset 0 0 0 0 rgba(255,255,255,0.0), inset 0 0 0 0.75em rgba(0, 87, 250, 0.75), inset 0 0 0 6em #0057fa;
-}
-.kudos.finish {
-  -moz-transition: box-shadow 0.45s linear, -moz-transform 0.5625s ease-in-out;
-  -o-transition: box-shadow 0.45s linear, -o-transform 0.5625s ease-in-out;
-  -webkit-transition: box-shadow 0.45s linear, -webkit-transform 0.5625s ease-in-out;
-  transition: box-shadow 0.45s linear, transform 0.5625s ease-in-out;
-  box-shadow: inset 0 0 0 0.25em rgba(204, 61, 57, 0.5), inset 0 0 0 0.5em rgba(255,255,255,0.0), inset 0 0 0 0.75em rgba(204, 61, 57, 0.75), inset 0 0 0 1em rgba(255,255,255,0.0), inset 0 0 0 0 rgba(255,255,255,0.0), inset 0 0 0 6em #cc3d39;
-}
-.kudos.finish:before {
-  margin:0;
-}
-#loggedInfo {
-  height:60px;
-  cursor:pointer;
-}
-#loggedInfo li a{
-  padding-top: 1em;
-  margin:0;
-  font-size: 1.2em;
-  position:absolute;
-  height:60px;
-  width: 80%;
-  left: 1em;
-  top: 0;
-}
-#loggedInfo li a:hover{
-  background-color: #ccc;
-}
-#launchProfileEdit {
-  font-size:22px;
-  cursor:pointer;
-}
-#launchProfileEdit:hover {
-  color:#3A3A3A;
-}
-#profilePic{
- margin-top:2em;
-margin-bottom:2em;
-}
-
-#meatList {
-  -webkit-transform:rotateZ(0deg);
-background-color:rgba(255,255,255,0.65);
-padding-bottom:3.5em;
-padding-top:5em;
--moz-transition: all 1s;
--webkit-transition: all 1s;
--ms-transition: all 1s;
--o-transition: all 1s;
-transition: all 1s;
-overflow-y:auto;
-}
-#meatlist > .dropdown-toggle {
-  pointer-events: none;
-  display:none;
-}
-#subnav {
-  width:100%;
-}
-@media (max-width: 767px) {
-#meatList  {
-  height:100%;
-}
-#meatlaunch {
-  position:absolute;
-  bottom:0;
-  right:0;
-}
-}
-@media (min-width: 768px) {
-  #meatList {
-  height:auto;
-  }
-#meatlaunch {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-}
 }
 #loadCont {
     position:fixed;
@@ -218,13 +64,47 @@ transition: all 1s;
    display: block;
 
    margin-top:6em;
-   margin-bottom:6em;
+   margin-bottom:10em;
    z-index:1020;
-   background-color:rgba(255,255,255,0.4);
+   background-color:rgba(255,255,255,0.2);
    }
-.navbar-default {
-background-color:rgba(255,255,255,0.4);
+.list-group-item {
+ background-color:#fff;
+padding-top: 1.5em;
+padding-bottom: 1.5em;
+border-left:none;
 }
+.list-group-item:nth-last-child(n){
+  border-bottom:none;
+}
+.list-group-item:first-child {
+  border-top:none;
+}
+.panel-default>.panel-heading {
+  background-color:#fff;
+}
+.panel-default>.panel-footer {
+  background-color:#fff;
+}
+.transparent {
+  background-color:rgba(255,255,255,0.0);
+}
+.navbar-default {
+background-color:rgba(255,255,255,0.0);
+border:none;
+}
+.navbar-fixed-top {
+  background-color:rgba(255,255,255,1);
+}
+.navbar-fixed-bottom {
+  background-color:rgba(255,255,255,.4);
+}
+/*.navbar-default .navbar-nav>li>a {
+  color:#1e1e1e;
+}
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
+  color:#0040D6;
+}*/
 #loggedBar {
   float:right;
   padding-right: 30px;
@@ -268,6 +148,230 @@ cursor:pointer;
     transform: rotate(360deg);
     cursor:pointer;
 }
+/*
+
+Chat list
+
+*/
+.hyphenate {
+ -ms-word-break: break-all;
+     word-break: break-all;
+
+     // Non standard for webkit
+     word-break: break-word;
+
+-webkit-hyphens: auto;
+   -moz-hyphens: auto;
+        hyphens: auto;
+}
+#meatMsgs {
+overflow-x:hidden;
+overflow-y:scroll;
+padding:0;
+}
+#meatMsgs li {
+  border-radius:0;
+}
+#meatMsgs li:nth-last-child {
+  border-bottom:0;
+}
+/*
+
+Form meat message
+
+*/
+.timestamp {
+font-size: 0.7em;
+/* float: right; */
+position: absolute;
+/* line-height: 0.5em; */
+bottom: 0.3em;
+right: 0;
+color:#c1c1c1;
+padding-right:0.3em;
+}
+#meatPanel {
+  padding:0;
+}
+#meatmsg {
+  display:inline-block;
+   -moz-transition: all 1s;
+-webkit-transition: all 1s;
+-ms-transition: all 1s;
+-o-transition: all 1s;
+transition: all 1s;
+min-height: 60px;
+max-height: 100px;
+overflow-y:auto;
+width:100%;
+height:auto;
+padding-top:1.2em;
+padding-bottom:1.2em;
+}
+
+/*
+
+Tabs
+
+*/
+#myTab li a {
+  cursor:pointer;
+}
+
+#meatlaunch {
+  display:none;
+}
+.meatItem {
+  cursor:pointer;
+}
+/*
+ * Kudos
+ */
+ .modal-backdrop {
+   z-index:1032;
+   background-color:rgba(255,255,255,0.8);
+ }
+.kudos {
+  width: 6em;
+  height: 6em;
+  margin:1em;
+  z-index:1031;
+  background-color:rgba(255,255,255,0.0);
+  box-shadow: inset 0 0 0 0.25em silver, inset 0 0 0 1.2em rgba(245,245,245,1), inset 0 0 0 6em rgba(0, 87, 250, 0.75);
+  line-height: 6em;
+  text-align: center;
+  border-radius: 50%;
+  -moz-transition: box-shadow 0.7s ease-in-out 0.1s;
+  -o-transition: box-shadow 0.7s ease-in-out 0.1s;
+  -webkit-transition: box-shadow 0.9s ease-in-out;
+  -webkit-transition-delay: 0.1s;
+  transition: box-shadow 0.9s ease-in-out 0.1s;
+}
+.kudos:before {
+/*  -moz-transition: font-size 0.45s ease-in;
+  -o-transition: font-size 0.45s ease-in;
+  -webkit-transition: font-size 0.45s ease-in;
+  transition: font-size 0.45s ease-in;
+  font-size: 1.75em;
+  color: white;
+  line-height: 3.47826em;*/
+  font-size: 1.2em;
+  color:#fff;
+}
+.kudos.active {
+  -moz-transition: box-shadow 0.5s linear;
+  -o-transition: box-shadow 0.5s linear;
+  -webkit-transition: box-shadow 0.5s linear;
+  transition: box-shadow 0.5s linear;
+  box-shadow: inset 0 0 0 0.25em silver, inset 0 0 0 0 rgba(255,255,255,1), inset 0 0 0 0.75em rgba(0, 87, 250, 0.75), inset 0 0 0 6em #0057fa;
+}
+.kudos.finish {
+  -moz-transition: box-shadow 0.45s linear, -moz-transform 0.5625s ease-in-out;
+  -o-transition: box-shadow 0.45s linear, -o-transform 0.5625s ease-in-out;
+  -webkit-transition: box-shadow 0.45s linear, -webkit-transform 0.5625s ease-in-out;
+  transition: box-shadow 0.45s linear, transform 0.5625s ease-in-out;
+  box-shadow: inset 0 0 0 0.25em rgba(204, 61, 57, 0.5), inset 0 0 0 0.5em rgba(255,255,255,1), inset 0 0 0 0.75em rgba(204, 61, 57, 0.75), inset 0 0 0 1em rgba(255,255,255,1), inset 0 0 0 0 rgba(255,255,255,1), inset 0 0 0 6em #cc3d39;
+}
+.kudos.finish:before {
+  margin:0;
+  color:#fff;
+}
+#loggedInfo {
+  cursor:pointer;
+}
+#loggedInfo li a:hover{
+  background-color: #ccc;
+}
+#launchProfileEdit {
+  font-size:22px;
+  cursor:pointer;
+}
+#launchProfileEdit:hover {
+  color:#3A3A3A;
+}
+#profilePic{
+ margin-top:2em;
+margin-bottom:2em;
+}
+.navbar {
+  min-height:0;
+}
+#meatList {
+background-color:rgba(255,255,255,0.6);
+padding-bottom:3.5em;
+padding-top:1em;
+-moz-transition: all 1s;
+-webkit-transition: all 1s;
+-ms-transition: all 1s;
+-o-transition: all 1s;
+transition: all 1s;
+overflow-y:auto;
+}
+#meatlist > .dropdown-toggle {
+  pointer-events: none;
+  display:none;
+}
+#subnav {
+  width:100%;
+}
+/*@media (max-width: 991px) {
+#meatList  {
+  height:110px;
+  max-height:110px;
+  width:100% !important;
+}
+#meatlist {
+  width:100% !important;
+}
+#subnavCont {
+  width:100% !important;
+}
+}*/
+@media (max-width: 991px) {
+#meatList  {
+  height:130px;
+  max-height:130px;
+  width:100% !important;
+}
+#meatlist {
+  width:100% !important;
+}
+#subnavCont {
+  width:100% !important;
+}
+#meatlaunch {
+  position:absolute;
+  bottom:0;
+  right:0;
+}
+#loggedInfo {
+  height:60px;
+}
+.navbar-nav .open .dropdown-menu {
+  background-color:rgba(255,255,255,0.6);
+}
+#loggedInfo li a{
+  padding-top: 1em;
+  margin:0;
+  font-size: 1.2em;
+  position:absolute;
+  height:60px;
+  width: 80%;
+  left: 1em;
+  top: 0;
+}
+}
+@media (min-width: 992px) {
+  #meatList {
+  height:100%;
+  }
+#meatlaunch {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+}
+
 
 
 
@@ -877,3 +981,60 @@ cursor:pointer;
   animation-name: rotateInDownRight; }
   
   
+/*
+ clippy
+*/
+.clippy, .clippy-balloon {
+    position: absolute;
+    left:0;
+    top:8.4em;
+    z-index: 1040;
+    cursor: pointer;
+}
+
+.clippy-balloon {
+
+    background-color:rgba(255,255,255,0.8);
+    color: black;
+    padding: 8px;
+    font-size:6em;
+    border: 1px solid black;
+    border-radius: 5px;
+
+}
+
+.clippy-content {
+    max-width: 200px;
+    min-width: 120px;
+    font-size: 10pt;
+}
+
+.clippy-top-left .clippy-tip {
+    top: 100%;
+    margin-top: 0px;
+    left: 100%;
+    margin-left: -50px;
+}
+
+.clippy-top-right .clippy-tip {
+    top: 100%;
+    margin-top: 0px;
+    left: 0;
+    margin-left: 50px;
+    background-position: -10px 0;
+
+}
+
+.clippy-bottom-right .clippy-tip {
+    top: 0;
+    left: 0;
+    margin-left: 50px;
+    background-position: -10px -16px;
+}
+
+.clippy-bottom-left .clippy-tip {
+    top: 0;
+    left: 100%;
+    margin-left: -50px;
+    background-position: 0px -16px;
+}

@@ -6,18 +6,17 @@ angular.module('sandflake', [
   'sandflake.controllers',
   'sandflake.directives'
 ]).
-run(function ($rootScope, $http, $location) {
+run(['$rootScope', '$http', '$location', function ($rootScope, $http, $location) {
   $rootScope.state = 'loading';
   $rootScope.included = 'loading';
   var host = window.location.hostname;
   var port = window.location.port;
-  console.log(host);
   if (port === 80)
      $rootScope.socket = new WebSocket('ws://' + host);
   else
-     $rootScope.socket = new WebSocket('ws://' + host);
-}).
-config(function ($routeProvider, $locationProvider) {
+     $rootScope.socket = new WebSocket('ws://' + host+':'+port);
+}]).
+config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
       controller: 'app',
@@ -44,11 +43,11 @@ config(function ($routeProvider, $locationProvider) {
       templateUrl: 'partials/root.html'
     })
     .when('/app/:appNamed', {
-      controller: 'app',
-      templateUrl: 'partials/app.html'
+      controller: '403',
+      templateUrl: 'partials/403.html'
     })
     .otherwise({
       redirectTo: '/'
     });
   $locationProvider.html5Mode(true);
-});
+}]);

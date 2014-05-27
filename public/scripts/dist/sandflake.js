@@ -33082,3 +33082,1931 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
   })
 
 }(jQuery);
+;angular.module('sandflake.directives', [])
+	.directive('pwCheck', [function () {
+	  
+  }]);;Kudos = (function() {
+  
+  var self = this;
+  
+  // Constructor
+  function Kudos(args, callback) {
+    self = this;
+    // All widgets
+    self.el = document.querySelectorAll(args.el)[0];
+    // Set the status
+    self.callback = callback;
+    self.status = args.status;
+    // Duration of activation
+    self.duration = args.duration;
+    // setTimeout-ID's
+    self.timer = {};
+    self.currentStatus = 'alpha';
+    self.changeStatus('alpha');
+      // Events
+      if (self.isTouch()) {
+        self.el.addEventListener('touchstart', self.enter);
+        self.el.addEventListener('touchend', self.out);
+      } else {
+        self.el.addEventListener('mouseover', self.enter);
+        self.el.addEventListener('mouseout', self.out);
+        self.el.addEventListener('click', function(e){
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          console.log('clock');
+        });
+      }
+  }
+  
+  
+  
+  Kudos.prototype.turnOff = function(){
+    var self = this;
+    self.removeClass('finish');
+    self.changeStatus('alpha');
+  }
+  /*
+   * Enter the element
+   */
+   
+  Kudos.prototype.enter = function(e) {
+      // Activate the kudo twist
+      self.addClass('active');
+      if (self.hasClass('finish'))
+         self.removeClass('finish');
+      // Start timeout
+      self.timer = setTimeout(function() {
+        self.removeClass('active');
+        if (self.currentStatus !== 'gamma') {
+           self.changeStatus('gamma');
+           self.addClass('finish');
+           self.callback('on');
+          }
+        else {
+           self.changeStatus('alpha');
+           self.callback('off');
+          }
+        
+      }, self.duration);
+  };
+  
+  // Leave the element
+  Kudos.prototype.out = function(e) {
+    self.removeClass('active');
+    clearTimeout(self.timer);
+    if (self.currentStatus === 'gamma')
+       self.addClass('finish');
+  };
+  /*
+   * Change the status of the widget and
+   * aply 3 different classes for the icon
+   * in the middle.
+   */
+  Kudos.prototype.changeStatus = function(state) {
+    var self = this;
+    if (self.status !== undefined) {
+       if (self.currentStatus)
+          self.removeClass(self.status[self.currentStatus]);
+      self.addClass(self.status[state]);
+      self.currentStatus = state;
+    }
+  };
+  
+
+   /*
+   * Add <CODE>class</CODE> to <CODE>el</CODE>
+   */
+  Kudos.prototype.addClass = function(classes) {
+    var el = this.el;
+    if (el.className.indexOf(classes) == -1)
+        el.className = el.className.trim() + ' ' + classes;
+  };
+  /*
+   * Remove <CODE>class</CODE> to <CODE>el</CODE>
+   */
+  Kudos.prototype.removeClass = function(classname) {
+    var el = this.el;
+    el.className = el.className.replace(classname, '').trim();
+  };
+  
+  /*
+   * Returns <CODE>true</CODE> if <CODE>el</CODE> has
+   * the <CODE>class</CODE>, <CODE>false</CODE> otherwise
+   */
+  Kudos.prototype.hasClass = function(classname) {
+    var el = this.el;
+    var classes = el.className.split(' '),
+        result = false;
+    for (var i = 0; i < classes.length; i++) {
+      if (classes[i] == classname) {
+        result = true;
+        break;
+      }
+    }
+    
+    return result;
+  };
+  
+  /*
+   * Returns <CODE>true</CODE> if the actual
+   * device is a touch device, <CODE>false</CODE> otherwise
+   *
+   * http://stackoverflow.com/a/4819886/1012875
+   */
+  Kudos.prototype.isTouch = function() {
+    return !!('ontouchstart' in window)
+        || !!('onmsgesturechange' in window);
+  };
+  
+  /*
+   * Saves the amount of a specific widget into localStorage
+   * when <CODE>persistent</CODE> is <CODE>true</CODE>.
+   */
+  Kudos.prototype.save = function(el, amount) {
+    console.log('save')
+  };
+  
+  /*
+   * Loads the amount of a specific widget from the localStorage
+   * when <CODE>persistent</CODE> is <CODE>true</CODE>.
+   */
+  Kudos.prototype.loadAmount = function(id) {
+    var result = _$.elements[id].getAttribute('data-amount') || 0;
+
+    if (_$.persistent) {
+      if ((amount = localStorage.getItem('kudos:saved:' + _$.elements[id].getAttribute('data-url'))) != null) {
+        result = amount;
+      }
+    }
+    
+    return result;
+  };
+  
+  /*
+   * Create a ajax request to a backend
+   * which just keeps track of the kudos counter
+   * via php & mysql
+   */
+  Kudos.prototype.request = function(el, type) {
+    this.callback(null, type);
+    /*var xhr;
+    
+    // Initialize
+    try {
+     xhr = new ActiveXObject("Microsoft.XMLHTTP");
+    } catch(e) {
+     xhr = new XMLHttpRequest();
+    }
+    
+    // Change the amount
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        var amount = xhr.responseText;
+        el.setAttribute('data-amount', amount);
+
+        if (type == 'GET') {
+          _$.changeStatus(el, amount == 0 ? 'alpha' : 'beta');
+          
+          if (_$.persistent
+           && localStorage.getItem('kudos:saved:' + el.getAttribute('data-url')) != null) {
+            
+            _$.changeStatus(el, 'gamma');
+          }
+        }
+
+        if (type == 'POST') {
+          _$.save(el, amount);
+        }
+      }
+    }
+    
+    var url = "?url="+encodeURIComponent(el.getAttribute('data-url'));
+    // Open request
+    xhr.open(type, "http://api.Kudos.com/" + url, true);
+    xhr.send();*/
+  };
+  
+  // trim polyfill
+  ''.trim || (String.prototype.trim = function(){
+    return this.replace(/^\s+|\s+$/g,'');
+  });
+  
+  return Kudos;
+})();;var clippy = {};
+
+/******
+ *
+ *
+ * @constructor
+ */
+clippy.Agent = function (path, data, sounds) {
+    this.path = path;
+
+    this._queue = new clippy.Queue($.proxy(this._onQueueEmpty, this));
+
+    this._el = $('<div class="clippy"></div>').hide();
+
+    $(document.body).append(this._el);
+
+    this._animator = new clippy.Animator(this._el, path, data, sounds);
+
+    this._balloon = new clippy.Balloon(this._el);
+
+    this._setupEvents();
+};
+
+clippy.Agent.prototype = {
+
+    /**************************** API ************************************/
+
+    /***
+     *
+     * @param {Number} x
+     * @param {Number} y
+     */
+    gestureAt:function (x, y) {
+        var d = this._getDirection(x, y);
+        var gAnim = 'Gesture' + d;
+        var lookAnim = 'Look' + d;
+
+        var animation = this.hasAnimation(gAnim) ? gAnim : lookAnim;
+        return this.play(animation);
+    },
+
+    /***
+     *
+     * @param {Boolean=} fast
+     *
+     */
+    hide:function (fast, callback) {
+        this._hidden = true;
+        var el = this._el;
+        this.stop();
+        if (fast) {
+            this._el.hide();
+            this.stop();
+            this.pause();
+            if (callback) callback();
+            return;
+        }
+
+        return this._playInternal('Hide', function () {
+            el.hide();
+            this.pause();
+            if (callback) callback();
+        })
+    },
+
+
+    moveTo:function (x, y, duration) {
+        var dir = this._getDirection(x, y);
+        var anim = 'Move' + dir;
+        if (duration === undefined) duration = 1000;
+
+        this._addToQueue(function (complete) {
+            // the simple case
+            if (duration === 0) {
+                this._el.css({top:y, left:x});
+                this.reposition();
+                complete();
+                return;
+            }
+
+            // no animations
+            if (!this.hasAnimation(anim)) {
+                this._el.animate({top:y, left:x}, duration, complete);
+                return;
+            }
+
+            var callback = $.proxy(function (name, state) {
+                // when exited, complete
+                if (state === clippy.Animator.States.EXITED) {
+                    complete();
+                }
+                // if waiting,
+                if (state === clippy.Animator.States.WAITING) {
+                    this._el.animate({top:y, left:x}, duration, $.proxy(function () {
+                        // after we're done with the movement, do the exit animation
+                        this._animator.exitAnimation();
+                    }, this));
+                }
+
+            }, this);
+
+            this._playInternal(anim, callback);
+        }, this);
+    },
+
+    _playInternal:function (animation, callback) {
+
+        // if we're inside an idle animation,
+        if (this._isIdleAnimation() && this._idleDfd && this._idleDfd.state() === 'pending') {
+            this._idleDfd.done($.proxy(function () {
+                this._playInternal(animation, callback);
+            }, this))
+        }
+
+        this._animator.showAnimation(animation, callback);
+    },
+
+    play:function (animation, timeout, cb) {
+        if (!this.hasAnimation(animation)) return false;
+
+        if (timeout === undefined) timeout = 5000;
+
+
+        this._addToQueue(function (complete) {
+            var completed = false;
+            // handle callback
+            var callback = function (name, state) {
+                if (state === clippy.Animator.States.EXITED) {
+                    completed = true;
+                    if (cb) cb();
+                    complete();
+                }
+            };
+
+            // if has timeout, register a timeout function
+            if (timeout) {
+                window.setTimeout($.proxy(function () {
+                    if (completed) return;
+                    // exit after timeout
+                    this._animator.exitAnimation();
+                }, this), timeout)
+            }
+
+            this._playInternal(animation, callback);
+        }, this);
+
+        return true;
+    },
+
+    /***
+     *
+     * @param {Boolean=} fast
+     */
+    show:function (fast) {
+
+        this._hidden = false;
+        if (fast) {
+            this._el.show();
+            this.resume();
+            this._onQueueEmpty();
+            return;
+        }
+
+        if (this._el.css('top') === 'auto' || !this._el.css('left') === 'auto') {
+            var left = $(window).width() * 0.8;
+            var top = ($(window).height() + $(document).scrollTop()) * 0.8;
+            this._el.css({top:top, left:left});
+        }
+
+        this.resume();
+        return this.play('Show');
+    },
+
+    /***
+     *
+     * @param {String} text
+     */
+    speak:function (text, hold) {
+        this._addToQueue(function (complete) {
+            this._balloon.speak(complete, text, hold);
+        }, this);
+    },
+
+
+    /***
+     * Close the current balloon
+     */
+    closeBalloon:function () {
+        this._balloon.hide();
+    },
+
+    delay:function (time) {
+        time = time || 250;
+
+        this._addToQueue(function (complete) {
+            this._onQueueEmpty();
+            window.setTimeout(complete, time);
+        });
+    },
+
+    /***
+     * Skips the current animation
+     */
+    stopCurrent:function () {
+        this._animator.exitAnimation();
+        this._balloon.close();
+    },
+
+
+    stop:function () {
+        // clear the queue
+        this._queue.clear();
+        this._animator.exitAnimation();
+        this._balloon.hide();
+    },
+
+    /***
+     *
+     * @param {String} name
+     * @returns {Boolean}
+     */
+    hasAnimation:function (name) {
+        return this._animator.hasAnimation(name);
+    },
+
+    /***
+     * Gets a list of animation names
+     *
+     * @return {Array.<string>}
+     */
+    animations:function () {
+        return this._animator.animations();
+    },
+
+    /***
+     * Play a random animation
+     * @return {jQuery.Deferred}
+     */
+    animate:function () {
+        var animations = this.animations();
+        var anim = animations[Math.floor(Math.random() * animations.length)];
+        // skip idle animations
+        if (anim.indexOf('Idle') === 0) {
+            return this.animate();
+        }
+        return this.play(anim);
+    },
+
+    /**************************** Utils ************************************/
+
+    /***
+     *
+     * @param {Number} x
+     * @param {Number} y
+     * @return {String}
+     * @private
+     */
+    _getDirection:function (x, y) {
+        var offset = this._el.offset();
+        var h = this._el.height();
+        var w = this._el.width();
+
+        var centerX = (offset.left + w / 2);
+        var centerY = (offset.top + h / 2);
+
+
+        var a = centerY - y;
+        var b = centerX - x;
+
+        var r = Math.round((180 * Math.atan2(a, b)) / Math.PI);
+
+        // Left and Right are for the character, not the screen :-/
+        if (-45 <= r && r < 45) return 'Right';
+        if (45 <= r && r < 135) return 'Up';
+        if (135 <= r && r <= 180 || -180 <= r && r < -135) return 'Left';
+        if (-135 <= r && r < -45) return 'Down';
+
+        // sanity check
+        return 'Top';
+    },
+
+    /**************************** Queue and Idle handling ************************************/
+
+    /***
+     * Handle empty queue.
+     * We need to transition the animation to an idle state
+     * @private
+     */
+    _onQueueEmpty:function () {
+        if (this._hidden || this._isIdleAnimation()) return;
+        var idleAnim = this._getIdleAnimation();
+        this._idleDfd = $.Deferred();
+
+        this._animator.showAnimation(idleAnim, $.proxy(this._onIdleComplete, this));
+    },
+
+    _onIdleComplete:function (name, state) {
+        if (state === clippy.Animator.States.EXITED) {
+            this._idleDfd.resolve();
+        }
+    },
+
+
+    /***
+     * Is the current animation is Idle?
+     * @return {Boolean}
+     * @private
+     */
+    _isIdleAnimation:function () {
+        var c = this._animator.currentAnimationName;
+        return c && c.indexOf('Idle') === 0;
+    },
+
+
+    /**
+     * Gets a random Idle animation
+     * @return {String}
+     * @private
+     */
+    _getIdleAnimation:function () {
+        var animations = this.animations();
+        var r = [];
+        for (var i = 0; i < animations.length; i++) {
+            var a = animations[i];
+            if (a.indexOf('Idle') === 0) {
+                r.push(a);
+            }
+        }
+
+        // pick one
+        var idx = Math.floor(Math.random() * r.length);
+        return r[idx];
+    },
+
+    /**************************** Events ************************************/
+
+    _setupEvents:function () {
+        $(window).on('resize', $.proxy(this.reposition, this));
+
+        this._el.on('mousedown', $.proxy(this._onMouseDown, this));
+
+        this._el.on('dblclick', $.proxy(this._onDoubleClick, this));
+    },
+
+    _onDoubleClick:function () {
+        if (!this.play('ClickedOn')) {
+            this.animate();
+        }
+    },
+
+    reposition:function () {
+        if (!this._el.is(':visible')) return;
+        var o = this._el.offset();
+        var bH = this._el.outerHeight();
+        var bW = this._el.outerWidth();
+
+        var wW = $(window).width();
+        var wH = $(window).height();
+        var sT = $(window).scrollTop();
+        var sL = $(window).scrollLeft();
+
+        var top = o.top - sT;
+        var left = o.left - sL;
+        var m = 5;
+        if (top - m < 0) {
+            top = m;
+        } else if ((top + bH + m) > wH) {
+            top = wH - bH - m;
+        }
+
+        if (left - m < 0) {
+            left = m;
+        } else if (left + bW + m > wW) {
+            left = wW - bW - m;
+        }
+
+        this._el.css({left:left, top:top});
+        // reposition balloon
+        this._balloon.reposition();
+    },
+
+    _onMouseDown:function (e) {
+        e.preventDefault();
+        this._startDrag(e);
+    },
+
+
+    /**************************** Drag ************************************/
+
+    _startDrag:function (e) {
+        // pause animations
+        this.pause();
+        this._balloon.hide(true);
+        this._offset = this._calculateClickOffset(e);
+
+        this._moveHandle = $.proxy(this._dragMove, this);
+        this._upHandle = $.proxy(this._finishDrag, this);
+
+        $(window).on('mousemove', this._moveHandle);
+        $(window).on('mouseup', this._upHandle);
+
+        this._dragUpdateLoop = window.setTimeout($.proxy(this._updateLocation, this), 10);
+    },
+
+    _calculateClickOffset:function (e) {
+        var mouseX = e.pageX;
+        var mouseY = e.pageY;
+        var o = this._el.offset();
+        return {
+            top:mouseY - o.top,
+            left:mouseX - o.left
+        }
+
+    },
+
+    _updateLocation:function () {
+        this._el.css({top:this._targetY, left:this._taregtX});
+        this._dragUpdateLoop = window.setTimeout($.proxy(this._updateLocation, this), 10);
+    },
+
+    _dragMove:function (e) {
+        e.preventDefault();
+        var x = e.clientX - this._offset.left;
+        var y = e.clientY - this._offset.top;
+        this._taregtX = x;
+        this._targetY = y;
+    },
+
+    _finishDrag:function () {
+        window.clearTimeout(this._dragUpdateLoop);
+        // remove handles
+        $(window).off('mousemove', this._moveHandle);
+        $(window).off('mouseup', this._upHandle);
+        // resume animations
+        this._balloon.show();
+        this.reposition();
+        this.resume();
+
+    },
+
+    _addToQueue:function (func, scope) {
+        if (scope) func = $.proxy(func, scope);
+        this._queue.queue(func);
+    },
+
+    /**************************** Pause and Resume ************************************/
+
+    pause:function () {
+        this._animator.pause();
+        this._balloon.pause();
+
+    },
+
+    resume:function () {
+        this._animator.resume();
+        this._balloon.resume();
+    }
+
+};
+
+/******
+ *
+ *
+ * @constructor
+ */
+clippy.Animator = function (el, path, data, sounds) {
+    this._el = el;
+    this._data = data;
+    this._path = path;
+    this._currentFrameIndex = 0;
+    this._currentFrame = undefined;
+    this._exiting = false;
+    this._currentAnimation = undefined;
+    this._endCallback = undefined;
+    this._started = false;
+    this._sounds = {};
+    this.currentAnimationName = undefined;
+    this.preloadSounds(sounds);
+    this._overlays = [this._el];
+    var curr = this._el;
+
+    this._setupElement(this._el);
+    for (var i = 1; i < this._data.overlayCount; i++) {
+        var inner = this._setupElement($('<div></div>'));
+
+        curr.append(inner);
+        this._overlays.push(inner);
+        curr = inner;
+    }
+};
+
+clippy.Animator.prototype = {
+    _setupElement:function (el) {
+        var frameSize = this._data.framesize;
+        el.css('display', "none");
+        el.css({width:frameSize[0], height:frameSize[1]});
+        el.css('background', "url('" + this._path + "/map.png') no-repeat");
+
+        return el;
+    },
+
+    animations:function () {
+        var r = [];
+        var d = this._data.animations;
+        for (var n in d) {
+            r.push(n);
+        }
+        return r;
+    },
+
+    preloadSounds:function (sounds) {
+
+        for (var i = 0; i < this._data.sounds.length; i++) {
+            var snd = this._data.sounds[i];
+            var uri = sounds[snd];
+            if (!uri) continue;
+            this._sounds[snd] = new Audio(uri);
+
+        }
+    },
+    hasAnimation:function (name) {
+        return !!this._data.animations[name];
+    },
+
+    exitAnimation:function () {
+        this._exiting = true;
+    },
+
+
+    showAnimation:function (animationName, stateChangeCallback) {
+        this._exiting = false;
+
+        if (!this.hasAnimation(animationName)) {
+            return false;
+        }
+
+        this._currentAnimation = this._data.animations[animationName];
+        this.currentAnimationName = animationName;
+
+
+        if (!this._started) {
+            this._step();
+            this._started = true;
+        }
+
+        this._currentFrameIndex = 0;
+        this._currentFrame = undefined;
+        this._endCallback = stateChangeCallback;
+
+        return true;
+    },
+
+
+    _draw:function () {
+        var images = [];
+        if (this._currentFrame) images = this._currentFrame.images || [];
+
+        for (var i = 0; i < this._overlays.length; i++) {
+            if (i < images.length) {
+                var xy = images[i];
+                var bg = -xy[0] + 'px ' + -xy[1] + 'px';
+                this._overlays[i].css({'background-position':bg, 'display':'block'});
+            }
+            else {
+                this._overlays[i].css('display', 'none');
+            }
+
+        }
+    },
+
+    _getNextAnimationFrame:function () {
+        if (!this._currentAnimation) return undefined;
+        // No current frame. start animation.
+        if (!this._currentFrame) return 0;
+        var currentFrame = this._currentFrame;
+        var branching = this._currentFrame.branching;
+
+
+        if (this._exiting && currentFrame.exitBranch !== undefined) {
+            return currentFrame.exitBranch;
+        }
+        else if (branching) {
+            var rnd = Math.random() * 100;
+            for (var i = 0; i < branching.branches.length; i++) {
+                var branch = branching.branches[i];
+                if (rnd <= branch.weight) {
+                    return branch.frameIndex;
+                }
+
+                rnd -= branch.weight;
+            }
+        }
+
+        return this._currentFrameIndex + 1;
+    },
+
+    _playSound:function () {
+        var s = this._currentFrame.sound;
+        if (!s) return;
+        var audio = this._sounds[s];
+        if (audio) audio.play();
+    },
+
+    _atLastFrame:function () {
+        return this._currentFrameIndex >= this._currentAnimation.frames.length - 1;
+    },
+
+    _step:function () {
+        if (!this._currentAnimation) return;
+        var newFrameIndex = Math.min(this._getNextAnimationFrame(), this._currentAnimation.frames.length - 1);
+        var frameChanged = !this._currentFrame || this._currentFrameIndex !== newFrameIndex;
+        this._currentFrameIndex = newFrameIndex;
+
+        // always switch frame data, unless we're at the last frame of an animation with a useExitBranching flag.
+        if (!(this._atLastFrame() && this._currentAnimation.useExitBranching)) {
+            this._currentFrame = this._currentAnimation.frames[this._currentFrameIndex];
+        }
+
+        this._draw();
+        this._playSound();
+
+        this._loop = window.setTimeout($.proxy(this._step, this), this._currentFrame.duration);
+
+
+        // fire events if the frames changed and we reached an end
+        if (this._endCallback && frameChanged && this._atLastFrame()) {
+            if (this._currentAnimation.useExitBranching && !this._exiting) {
+                this._endCallback(this.currentAnimationName, clippy.Animator.States.WAITING);
+            }
+            else {
+                this._endCallback(this.currentAnimationName, clippy.Animator.States.EXITED);
+            }
+        }
+    },
+
+    /***
+     * Pause animation execution
+     */
+    pause:function () {
+        window.clearTimeout(this._loop);
+    },
+
+    /***
+     * Resume animation
+     */
+    resume:function () {
+        this._step();
+    }
+};
+
+clippy.Animator.States = { WAITING:1, EXITED:0 };
+
+/******
+ *
+ *
+ * @constructor
+ */
+clippy.Balloon = function (targetEl) {
+    this._targetEl = targetEl;
+
+    this._hidden = true;
+    this._setup();
+};
+
+clippy.Balloon.prototype = {
+
+    WORD_SPEAK_TIME:320,
+    CLOSE_BALLOON_DELAY:2000,
+
+    _setup:function () {
+
+        this._balloon = $('<div class="clippy-balloon"><div class="clippy-tip"></div><div class="clippy-content"></div></div> ').hide();
+        this._content = this._balloon.find('.clippy-content');
+
+        $(document.body).append(this._balloon);
+    },
+
+    reposition:function () {
+        var sides = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
+        for (var i = 0; i < sides.length; i++) {
+            var s = sides[i];
+            this._position(s);
+            if (!this._isOut()) break;
+        }
+    },
+
+    _BALLOON_MARGIN:15,
+
+    /***
+     *
+     * @param side
+     * @private
+     */
+    _position:function (side) {
+        var o = this._targetEl.offset();
+        var h = this._targetEl.height();
+        var w = this._targetEl.width();
+
+        var bH = this._balloon.outerHeight();
+        var bW = this._balloon.outerWidth();
+
+        this._balloon.removeClass('clippy-top-left');
+        this._balloon.removeClass('clippy-top-right');
+        this._balloon.removeClass('clippy-bottom-right');
+        this._balloon.removeClass('clippy-bottom-left');
+
+        var left, top;
+        switch (side) {
+            case 'top-left':
+                // right side of the balloon next to the right side of the agent
+                left = o.left + w - bW;
+                top = o.top - bH - this._BALLOON_MARGIN;
+                break;
+            case 'top-right':
+                // left side of the balloon next to the left side of the agent
+                left = o.left;
+                top = o.top - bH - this._BALLOON_MARGIN;
+                break;
+            case 'bottom-right':
+                // right side of the balloon next to the right side of the agent
+                left = o.left;
+                top = o.top + h + this._BALLOON_MARGIN;
+                break;
+            case 'bottom-left':
+                // left side of the balloon next to the left side of the agent
+                left = o.left + w - bW;
+                top = o.top + h + this._BALLOON_MARGIN;
+                break;
+        }
+
+        this._balloon.css({top:top, left:left});
+        this._balloon.addClass('clippy-' + side);
+    },
+
+    _isOut:function () {
+        var o = this._balloon.offset();
+        var bH = this._balloon.outerHeight();
+        var bW = this._balloon.outerWidth();
+
+        var wW = $(window).width();
+        var wH = $(window).height();
+        var sT = $(document).scrollTop();
+        var sL = $(document).scrollLeft();
+
+        var top = o.top - sT;
+        var left = o.left - sL;
+        var m = 5;
+        if (top - m < 0 || left - m < 0) return true;
+        if ((top + bH + m) > wH || (left + bW + m) > wW) return true;
+
+        return false;
+    },
+
+    speak:function (complete, text, hold) {
+        this._hidden = false;
+        this.show();
+        var c = this._content;
+        // set height to auto
+        c.height('auto');
+        c.width('auto');
+        // add the text
+        c.text(text);
+        // set height
+        c.height(c.height());
+        c.width(c.width());
+        c.text('');
+        this.reposition();
+
+        this._complete = complete;
+        this._sayWords(text, hold, complete);
+    },
+
+    show:function () {
+        if (this._hidden) return;
+        this._balloon.show();
+    },
+
+    hide:function (fast) {
+        if (fast) {
+            this._balloon.hide();
+            return;
+        }
+
+        this._hiding = window.setTimeout($.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
+    },
+
+    _finishHideBalloon:function () {
+        if (this._active) return;
+        this._balloon.hide();
+        this._hidden = true;
+        this._hiding = null;
+    },
+
+    _sayWords:function (text, hold, complete) {
+        this._active = true;
+        this._hold = hold;
+        var words = text.split(/[^\S-]/);
+        var time = this.WORD_SPEAK_TIME;
+        var el = this._content;
+        var idx = 1;
+
+
+        this._addWord = $.proxy(function () {
+            if (!this._active) return;
+            if (idx > words.length) {
+                this._active = false;
+                if (!this._hold) {
+                    complete();
+                    this.hide();
+                }
+            } else {
+                el.text(words.slice(0, idx).join(' '));
+                idx++;
+                this._loop = window.setTimeout($.proxy(this._addWord, this), time);
+            }
+        }, this);
+
+        this._addWord();
+
+    },
+
+    close:function () {
+        if (this._active) {
+            this._hold = false;
+        } else if (this._hold) {
+            this._complete();
+        }
+    },
+
+    pause:function () {
+        window.clearTimeout(this._loop);
+        if (this._hiding) {
+            window.clearTimeout(this._hiding);
+            this._hiding = null;
+        }
+    },
+
+    resume:function () {
+        if (this._addWord)  this._addWord();
+        this._hiding = window.setTimeout($.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
+    }
+
+
+};
+
+clippy.BASE_PATH = '//s3.amazonaws.com/clippy.js/Agents/';
+
+clippy.load = function (name, successCb, failCb) {
+    var path = clippy.BASE_PATH + name;
+
+    var mapDfd = clippy.load._loadMap(path);
+    var agentDfd = clippy.load._loadAgent(name, path);
+    var soundsDfd = clippy.load._loadSounds(name, path);
+
+    var data;
+    agentDfd.done(function (d) {
+        data = d;
+    });
+
+    var sounds;
+
+    soundsDfd.done(function (d) {
+        sounds = d;
+    });
+
+    // wrapper to the success callback
+    var cb = function () {
+        var a = new clippy.Agent(path, data,sounds);
+        successCb(a);
+    };
+
+    $.when(mapDfd, agentDfd, soundsDfd).done(cb).fail(failCb);
+};
+
+clippy.load._maps = {};
+clippy.load._loadMap = function (path) {
+    var dfd = clippy.load._maps[path];
+    if (dfd) return dfd;
+
+    // set dfd if not defined
+    dfd = clippy.load._maps[path] = $.Deferred();
+
+    var src = path + '/map.png';
+    var img = new Image();
+
+    img.onload = dfd.resolve;
+    img.onerror = dfd.reject;
+
+    // start loading the map;
+    img.setAttribute('src', src);
+
+    return dfd.promise();
+};
+
+clippy.load._sounds = {};
+
+clippy.load._loadSounds = function (name, path) {
+    var dfd = clippy.load._sounds[name];
+    if (dfd) return dfd;
+
+    // set dfd if not defined
+    dfd = clippy.load._sounds[name] = $.Deferred();
+
+    var audio = document.createElement('audio');
+    var canPlayMp3 = !!audio.canPlayType && "" != audio.canPlayType('audio/mpeg');
+    var canPlayOgg = !!audio.canPlayType && "" != audio.canPlayType('audio/ogg; codecs="vorbis"');
+
+    if (!canPlayMp3 && !canPlayOgg) {
+        dfd.resolve({});
+    } else {
+        var src = path + (canPlayMp3 ? '/sounds-mp3.js' : '/sounds-ogg.js');
+        // load
+        clippy.load._loadScript(src);
+    }
+
+    return dfd.promise()
+};
+
+
+clippy.load._data = {};
+clippy.load._loadAgent = function (name, path) {
+    var dfd = clippy.load._data[name];
+    if (dfd) return dfd;
+
+    dfd = clippy.load._getAgentDfd(name);
+
+    var src = path + '/agent.js';
+
+    clippy.load._loadScript(src);
+
+    return dfd.promise();
+};
+
+clippy.load._loadScript = function (src) {
+    var script = document.createElement('script');
+    script.setAttribute('src', src);
+    script.setAttribute('async', 'async');
+    script.setAttribute('type', 'text/javascript');
+
+    document.head.appendChild(script);
+};
+
+clippy.load._getAgentDfd = function (name) {
+    var dfd = clippy.load._data[name];
+    if (!dfd) {
+        dfd = clippy.load._data[name] = $.Deferred();
+    }
+    return dfd;
+};
+
+clippy.ready = function (name, data) {
+    var dfd = clippy.load._getAgentDfd(name);
+    dfd.resolve(data);
+};
+
+clippy.soundsReady = function (name, data) {
+    var dfd = clippy.load._sounds[name];
+    if (!dfd) {
+        dfd = clippy.load._sounds[name] = $.Deferred();
+    }
+
+    dfd.resolve(data);
+};
+
+/******
+ * Tiny Queue
+ *
+ * @constructor
+ */
+clippy.Queue = function (onEmptyCallback) {
+    this._queue = [];
+    this._onEmptyCallback = onEmptyCallback;
+};
+
+clippy.Queue.prototype = {
+    /***
+     *
+     * @param {function(Function)} func
+     * @returns {jQuery.Deferred}
+     */
+    queue:function (func) {
+        this._queue.push(func);
+
+        if (this._queue.length === 1 && !this._active) {
+            this._progressQueue();
+        }
+    },
+
+    _progressQueue:function () {
+
+        // stop if nothing left in queue
+        if (!this._queue.length) {
+            this._onEmptyCallback();
+            return;
+        }
+
+        var f = this._queue.shift();
+        this._active = true;
+
+        // execute function
+        var completeFunction = $.proxy(this.next, this);
+        f(completeFunction);
+    },
+
+    clear:function () {
+        this._queue = [];
+    },
+
+    next:function () {
+        this._active = false;
+        this._progressQueue();
+    }
+};;'use strict';
+
+angular.module('sandflake.factories', []).
+  factory('auth', ['$rootScope', '$http', '$location', '$window',function($rootScope, $http, $location, $window) {
+    var login = function (uname) {
+          $rootScope.isAuthenticated = true;
+          $rootScope.uname = uname;
+          //console.log($rootScope.heartbeats+':'+$rootScope.state+'@'+uname);
+          window.location.href = '/';
+       };
+    var logout = function() {
+       var log = {
+         type: 'signOut',
+         uname: $rootScope.uname
+         };
+       $rootScope.socket.send(JSON.stringify(log));
+       $rootScope.isAuthenticated = false;
+       $rootScope.uname = 'alien';
+       window.location.href = '/signout';
+       };
+       return {
+         login: login,
+         logout: logout
+       };
+  }]);;'use strict';
+angular.module('sandflake.app', []).
+  controller('app', ['$rootScope', '$scope', '$location', '$http', '$routeParams', function ($rootScope, $scope, $location, $http, $routeParams){
+     $rootScope.start = true;
+     $rootScope.loading();
+     $scope.appNamed = $routeParams.appNamed;
+     $scope.init = function(){
+        $rootScope.loading();
+        $('.panel').addClass('animated bounceInDown');
+				};
+		
+     $scope.intervalLoad = setInterval(function(){
+       if ($rootScope.state === 'start') {
+          clearInterval($scope.intervalLoad);
+          $scope.init();
+          }
+       },100);
+  }]);;'use strict';
+angular.module('sandflake.profile', []).
+  controller('profile', ['$rootScope', '$scope', '$location', '$http', '$routeParams', function ($rootScope, $scope, $location, $http, $routeParams){
+     $scope.module = $routeParams.module;
+     $scope.section = $routeParams.section;
+     $rootScope.start = true;
+     $rootScope.loading();
+     $scope.updateProfile = function(e){
+        $rootScope.loading();
+        $('.panel').addClass('animated bounceInDown');
+        $rootScope.socket.send(JSON.stringify({
+          type: 'profile:set',
+          us: document.getElementById('pemail').value,
+          uname: document.getElementById('puname').value,
+          pname: document.getElementById('pname').value,
+          lname: document.getElementById('plastname').value,
+          dbirth: document.getElementById('dbirth').value
+          }));
+     }
+     $scope.init = function(){
+        $('#editProfilePic').on('show.bs.modal', function (e) {
+          $("body").css('overflow', 'hidden');
+        });
+        $('#editProfilePic').on('hidden.bs.modal', function (e) {
+         $("body").css('overflow', 'auto');
+        });
+        $('#launchProfileEdit').on('click', function(e) {
+         $('#profileUpload').click();
+        })
+        $('#profileUpload').on('change', function(e){
+            var file = e.originalEvent.target.files[0],
+                reader = new FileReader();
+            reader.onload = function(evt){
+                $rootScope.socket.send(JSON.stringify({
+                  type: 'profile:upload',
+                  uname: $rootScope.uname,
+                  image: evt.target.result
+                  }));
+            };
+            reader.readAsDataURL(file);
+        });
+        $rootScope.loading();
+        $('.panel').addClass('animated bounceInDown');
+				};
+     $scope.intervalLoad = setInterval(function(){
+       if ($rootScope.state === 'start') {
+          clearInterval($scope.intervalLoad);
+          if ($rootScope.uname !== 'alien') {
+             $rootScope.socket.send(JSON.stringify({
+               type: 'profile:get',
+               uname: $rootScope.uname
+               }));
+             $scope.init();
+             }
+          else
+             $scope.$apply(function(){
+               $location.path("/");
+             });
+          }
+       },100);
+  }]);;'use strict';
+angular.module('sandflake.root', []).
+  controller('root', ['$rootScope', '$scope', '$location', '$http', function ($rootScope, $scope, $location, $http){
+     $rootScope.start = true;
+     $rootScope.loading();
+     $scope.validateEmail = function(email, callback) {
+       var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+       callback(re.test(email));
+       };
+     $scope.validatePssw = function(pssw, callback) {
+       callback((pssw.length >= 8));
+       };
+     $scope.validateUname = function(pssw, callback) {
+       callback((pssw.length >= 3));
+       };
+     $scope.init = function(){
+       switch($location.path()) {
+                     case '/signup':
+                       //document.getElementById('singup_email').focus();
+                       $scope.singup_email_v = false;
+                       $scope.singup_pssw_v = false;
+                       $scope.signUp = function() {
+                          var user_data = {
+                              us: $scope.singup_email.value,
+                              pw: $scope.singup_pssw.value,
+                              type: 'signUp'
+                              };
+                          $rootScope.loading();
+                          $rootScope.socket.send(JSON.stringify(user_data));
+                          };
+                       $scope.keyMail = function() {
+                           $scope.singup_email_v = false;
+                           $scope.singup_email = document.getElementById('singup_email');
+                           $scope.user_signup = document.getElementById('user_signup');
+                           $scope.validateEmail($scope.singup_email.value.toString(), function(res){
+                             if (res)
+                                {
+                                //$scope.singup_email.parentNode.childNodes[1].innerHTML = '';
+                                $scope.singup_email.parentNode.className = 'form-group has-success';
+                                $scope.singup_email_v = true;
+                                }
+                                else
+                                   {
+                                   //$scope.singup_email.parentNode.childNodes[1].innerHTML = '';
+                                   $scope.singup_email.parentNode.className = 'form-group has-error';
+                                   }
+                             if ($scope.singup_pssw_v && $scope.singup_email_v)
+                                {
+                                $scope.user_signup.disabled = false;
+                                }
+                                else
+                                   {
+                                   $scope.user_signup.disabled = true;
+                                   }
+                             });
+                          };
+                       $scope.keyPssw = function() {
+                           $scope.singup_pssw_v = false;
+                           $scope.singup_pssw = document.getElementById('singup_pssw');
+                           $scope.user_signup = document.getElementById('user_signup');
+                           $scope.validatePssw($scope.singup_pssw.value.toString(), function(res){
+                             if (res)
+                                {
+                                //$scope.singup_pssw.parentNode.childNodes[1].innerHTML = '';
+                                $scope.singup_pssw.parentNode.className = 'form-group has-success';
+                                $scope.singup_pssw_v = true;
+                                }
+                                else
+                                   {
+                                   //$scope.singup_pssw.parentNode.childNodes[1].innerHTML = '';
+                                   $scope.singup_pssw.parentNode.className = 'form-group has-error';
+                                   }
+                             if ($scope.singup_pssw_v && $scope.singup_email_v)
+                                {
+                                $scope.user_signup.disabled = false;
+                                }
+                                else
+                                   {
+                                   $scope.user_signup.disabled = true;
+                                   }
+                             });
+                          };
+                     break;
+                     case '/login':
+                       //document.getElementById('singin_email').focus();
+                       $scope.singin_email_v = false;
+                       $scope.singin_pssw_v = false;
+                       $scope.signIn = function() {
+                          var user_data = {
+                            us: $scope.singin_email.value,
+                            pw: $scope.singin_pssw.value,
+                            type: 'signIn'
+                            };
+                          $rootScope.loading();
+                          $rootScope.socket.send(JSON.stringify(user_data));
+                          };
+                       $scope.keyMail = function() {
+                           $scope.singin_email_v = false;
+                           $scope.singin_email = document.getElementById('singin_email');
+                           $scope.user_signin = document.getElementById('user_signin');
+                           $scope.validateUname($scope.singin_email.value.toString(), function(res){
+                             if (res)
+                                {
+                                //$scope.singin_email.parentNode.childNodes[1].innerHTML = '';
+                                $scope.singin_email.parentNode.className = 'form-group has-success';
+                                $scope.singin_email_v = true;
+                                }
+                                else
+                                   {
+                                   //$scope.singin_email.parentNode.childNodes[1].innerHTML = '';
+                                   $scope.singin_email.parentNode.className = 'form-group has-error';
+                                   }
+                             if ($scope.singin_pssw_v && $scope.singin_email_v)
+                                {
+                                $scope.user_signin.disabled = false;
+                                }
+                                else
+                                   {
+                                   $scope.user_signin.disabled = true;
+                                   }
+                             });
+                          };
+                       $scope.keyPssw = function() {
+                           $scope.singin_pssw_v = false;
+                           $scope.singin_pssw = document.getElementById('singin_pssw');
+                           $scope.user_signin = document.getElementById('user_signin');
+                           $scope.validatePssw($scope.singin_pssw.value.toString(), function(res){
+                             if (res)
+                                {
+                                //$scope.singin_pssw.parentNode.childNodes[1].innerHTML = '';
+                                $scope.singin_pssw.parentNode.className = 'form-group has-success';
+                                $scope.singin_pssw_v = true;
+                                }
+                                else
+                                   {
+                                   //$scope.singin_pssw.parentNode.childNodes[1].innerHTML = '';
+                                   $scope.singin_pssw.parentNode.className = 'form-group has-error';
+                                   }
+                             if ($scope.singin_pssw_v && $scope.singin_email_v)
+                                {
+                                $scope.user_signin.disabled = false;
+                                }
+                                else
+                                   {
+                                   $scope.user_signin.disabled = true;
+                                   }
+                             });
+                          };
+                     break;
+                     }
+        $rootScope.loading();
+        $('.panel').addClass('animated bounceInDown');
+				};
+     $scope.intervalLoad = setInterval(function(){
+       if ($rootScope.state === 'start') {
+          clearInterval($scope.intervalLoad);
+          if ($rootScope.uname === 'alien')
+             $scope.init();
+          else
+             $scope.$apply(function(){
+               $location.path("/");
+             });
+          }
+       },100);
+    }]);;'use strict';
+angular.module('sandflake.meat', []).
+  controller('meat', ['$rootScope', '$scope', '$location', '$http', '$routeParams', function ($rootScope, $scope, $location, $http, $routeParams){
+     $scope.roomId = $routeParams.id;
+     $scope.room = atob(decodeURI($scope.roomId));
+     $scope.$on('$routeChangeStart', function(event, current, previous, rejection) {
+      $('body, html').css({overflowY:'auto'});
+        var log = {
+        room: $scope.roomId,
+        type: 'leave'
+        };
+      $rootScope.socket.send(JSON.stringify(log));
+     });
+     $rootScope.loading();
+     $scope.init = function(){
+        $('body, html').css({overflowY:'hidden'});
+        $('#meatMsgs').css({height: (window.innerHeight-370).toString()+'px', overflowY: 'scroll'});
+        $('#meatmsg').focus(function(){
+          $(this).css({height: '80px'});
+        });
+        $('#meatmsg').blur(function(){
+          $(this).css({height: '50px'});
+        });
+        $('#meatmsg').keypress(function(e){
+          if ((e.charCode === 13)||(e.keyCode === 13)) {
+             $scope.sendMeat();
+             return false;
+           }
+        });
+        $rootScope.loading();
+        $('.panel').addClass('animated bounceInRight');
+				};
+      $scope.sendMeat = function(e){
+        $rootScope.socket.send(JSON.stringify({type: 'meat', room: $scope.roomId, msg: $('#meatmsg').val(), user: $rootScope.uname}));
+        $('#meatmsg').val('');
+        };
+     $scope.intervalLoad = setInterval(function(){
+       if ($rootScope.state === 'start') {
+          clearInterval($scope.intervalLoad);
+          if ($rootScope.uname !== 'alien') {
+             $rootScope.socket.send(JSON.stringify({
+                room: $scope.roomId,
+                type: 'join'
+                }));
+             $scope.init();
+             }
+          else
+             $scope.$apply(function(){
+               $location.path("/");
+             });
+          }
+       },100);
+  }]);;'use strict';
+
+angular.module('sandflake.controllers', [
+   'sandflake.app',
+   'sandflake.root',
+   'sandflake.meat',
+   'sandflake.profile'
+   ]).
+  controller('sandflake', ['$rootScope', '$scope', '$http', '$location', 'auth' ,function($rootScope, $scope, $http, $location, auth){
+    $scope.homeLink = document.getElementById('logoapp');
+    $rootScope.menuList = document.getElementById('menu_list');
+    $scope.load = document.getElementById('load');
+    $scope.loadCont = document.getElementById('loadCont');
+    clippy.load('Bonzi', function(agent){
+        // do anything with the loaded agent
+        agent.moveTo(100,100);
+        agent.show();
+    });
+    $rootScope.heartbeats = 0;
+    $scope.currentLink = $scope.homeLink;
+    $scope.$rota = $('#load');
+    $scope.timer;
+    $scope.redraw = function()
+       {
+       $('#meatList').css({ height: window.innerHeight+'px'});
+       $('#meatMsgs').css({ height: window.innerHeight-355+'px'});
+       $('#upnav').css({width:window.innerWidth+'px'});
+       $('#subnav').css({width:window.innerWidth+'px'});
+       $('#meatlaunch').css({position:'absolute'});
+       };
+    $scope.debouncedRedraw = _.debounce($scope.redraw, 100);
+    $(window).on('resize', $scope.debouncedRedraw);
+    $('#subnavCollapse').css('display', 'none');
+    $('#subnavCollapse').on('click', function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    });
+    $scope.rotate = function() {
+        // timeout increase degrees:
+        $scope.degree = 0;
+        $scope.timer = setInterval(function() {
+            $scope.degree++;
+            $scope.$rota.css({ transform: 'rotate(' + $scope.degree + 'deg)'});
+        },100);
+      };
+    $rootScope.loading = function(){
+      if ($rootScope.start) {
+         $rootScope.start = false;
+         $('.container-app').hide();
+         //$rootScope.menuList.style.display = 'none';
+         //$scope.homeLink.style.display = 'none';
+         $scope.loadCont.style.display = 'block';
+         $scope.rotate();    // run it!
+         }
+      else {
+         clearInterval($scope.timer);
+         $('.container-app').show();
+         $rootScope.start = true;
+         //$rootScope.menuList.style.display = 'block';
+         //$scope.homeLink.style.display = 'block';
+         $scope.loadCont.style.display = 'none';
+         }
+    };
+    $scope.homeLink.addEventListener('click', function(){
+      $scope.currentLink.className = '';
+      });
+    $rootScope.meatLaunch = new Kudos({
+         el : '#meatlaunch',
+         duration : 800,
+         status : {
+           alpha : 'fa fa-group',
+           beta : 'fa fa-dot-circle-o',
+           gamma : 'fa fa-bolt'
+         }
+       }, function(res){
+              $('#meatlist').find('.dropdown-toggle').dropdown('toggle');
+              if (res === 'on') {
+                 //$('body').addClass('hiddenOverflow');
+                 $('#subnav').addClass('in');
+                 $('#meatList').addClass('animated bounceInRight');
+                 }
+              else {
+                   $('#meatList').removeClass('animated bounceInRight');
+                   $('#subnav').removeClass('in');
+/*                   $rootScope.socket.send(JSON.stringify({
+                     room: 'main',
+                     type: 'leave'
+                   }));*/
+                   //$('body').removeClass('hiddenOverflow');
+                   }
+       });
+    $('#meatlist').on('shown.bs.dropdown', function () {
+      $('#meatList').css({ height: window.innerHeight});
+    });
+    $('#meatlist').on('hide.bs.dropdown', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    });
+    $('#logoapp').on('click', function(){
+        $scope.$apply(function(){
+          $location.path("/");
+        });
+      });
+    $rootScope.loadMenu = function(){
+      if ($rootScope.state === 'loading')
+        _.each($rootScope.menuItems, function(value){
+             var li = document.createElement('li');
+             var link = document.createElement('a');
+             var ic = document.createElement('i');
+             if (value.url === $location.path()) {
+                li.className = 'active';
+                $scope.currentLink = li;
+                }
+             link.innerHTML = ' '+value.name;
+             li.dataset.url = value.url;
+             ic.className = 'fa fa-'+value.icon;
+             link.addEventListener('click', function(){
+                   var links = this.parentNode.parentNode.childNodes;
+                   for(var i=0; i<links.length; i++) {
+                      if (links[i] !== this.parentNode)
+                         links[i].className = '';
+                      else {
+                         links[i].className = 'active';
+                         $scope.currentLink = this.parentNode;
+                         }
+                      }
+                   $scope.$apply(function(){
+                     $location.path(value.url);
+                   });
+                  }, false);
+         link.insertBefore(ic, link.firstChild);
+         li.appendChild(link);
+         $rootScope.menuList.appendChild(li);
+         });
+       else {
+          var links = $rootScope.menuList.childNodes;
+          for(var i=0; i<links.length; i++) {
+             if (links[i].dataset.url!==$location.path())
+                links[i].className = '';
+             else
+                links[i].className = 'active';
+             }
+          }
+    };
+    $rootScope.socket.onerror = function (wss) {
+     console.log('err');
+    };
+    $rootScope.socket.onclose = function (wss) {
+      $scope.loadCont.style.display = 'block';
+      setTimeout(function(){
+        window.location.href = '/';
+      }, 2000);
+
+    };
+    $rootScope.socket.onopen = function (wss) {
+      var log = {
+        app: $rootScope.app,
+        type: 'start'
+        };
+    $rootScope.socket.send(JSON.stringify(log));
+      setInterval(function(){
+      var log = {
+        app: $rootScope.app,
+        type: 'ping'
+        };
+      $rootScope.socket.send(JSON.stringify(log));
+      },5000);
+      };
+    $rootScope.$on('$routeChangeStart', function(event, current, previous, rejection) {
+      $rootScope.loadMenu();
+      $rootScope.included = 'loading';
+      });
+    $rootScope.$on('$includeContentLoaded', function(event) {
+      $rootScope.included = 'start';
+      });
+    $rootScope.socket.onmessage = function (event) {
+        var data = JSON.parse(event.data);
+          if ((data)&&(data.type)){
+            switch(data.type) {
+               case 'start':
+                      $rootScope.uname = data.uname;
+                      console.log('%c'+$rootScope.uname, 'background: #222; color: #bada55');
+                      $rootScope.menuItems = data.menu;
+                      $rootScope.sid = data.sid;
+                      var loginfo = document.getElementById('loginfo');
+                      var logoapp = document.getElementById('logoapp');
+                      var menuList = document.getElementById('menu_list');
+                      var loggedInfo = document.getElementById('loggedInfo');
+                      var loggedBar = document.getElementById('loggedBar');
+                      var ml = document.getElementById('meatlaunch');
+                      if ($rootScope.uname !== 'alien') {
+                          $rootScope.socket.send(JSON.stringify({
+                            room: 'main',
+                            type: 'join'
+                          }));
+                          $(ml).show();
+                          $(loggedBar).empty();
+                          $(loggedBar).append('<i class="fa fa-power-off"></i>');
+                          $(loggedInfo).append('<li role="presentation"><a role="menuitem"><i class="fa fa-sign-out"></i> Exit</a><li>');
+                          $(loggedInfo).on('click', function(){
+                            auth.logout();
+                            });
+                          $(loginfo).on('shown.bs.dropdown', function () {
+                            $(logoapp).addClass('hidden');
+                            $(menuList).addClass('hidden');
+                          });
+                          $(loginfo).on('hidden.bs.dropdown', function () {
+                            $(logoapp).removeClass('hidden');
+                            $(menuList).removeClass('hidden');
+                          });
+                         }
+                      else {
+                          $(ml).hide();
+                          $(loggedBar).empty().hide();
+                         }
+                      $rootScope.loadMenu();
+                      $rootScope.state = 'start';
+               break;
+               case 'pong':
+                    $rootScope.heartbeats++;
+               break;
+               case 'sign_in_fail':
+                     var panel = document.getElementById('signinPanelBody');
+                     var div = document.createElement('div');
+                     var btn = document.createElement('button');
+                     var msg = document.createElement('p');
+                     div.className = 'alert alert-danger alert-dismissable';
+                     btn.type = 'button';
+                     btn.className = 'close';
+                     btn.dataset.dismiss = 'alert';
+                     btn.innerHTML = '&times;';
+                     msg.innerHTML = data.response.toString();
+                     div.appendChild(btn);
+                     div.appendChild(msg);
+                     panel.insertBefore(div, panel.firstChild);
+                     $scope.singin_pssw = document.getElementById('singin_pssw');
+                     $scope.user_signin = document.getElementById('user_signin');
+                     $scope.singin_pssw.value = '';
+                     //$scope.singin_pssw.parentNode.childNodes[1].innerHTML = 'Contraseña';
+                     $scope.singin_pssw.parentNode.className = 'form-group';
+                     $scope.user_signin.disabled = true;
+                     $rootScope.loading();
+               break;
+               case 'sign_in_ok':
+                     if (data.sid === $rootScope.sid)
+                        auth.login(data.response);
+               break;
+               case 'room:reject':
+                     var log = data.response;
+                     $('#meatList').empty();
+                     $('#meatList').append('<p style="color:red;">You have a client conected</p>');
+               break;
+               case 'room:read':
+                     $('#meatList').empty();
+                     _.each(data.response, function(item){
+                      if (item!=$rootScope.uname) {
+                       $('#meatList').append('<li class="meatItem" role="presentation"><a role="menuitem"><img src="images/icons/icon-16.png" />'+item+'</a></li>');
+                       $('.meatItem').last().on('click', function(e){
+                        $scope.$apply(function(){
+                           var monoid = [$rootScope.uname, item].sort();
+                           var log = encodeURI(btoa(monoid[0]+':'+monoid[1]));
+                           if (window.innerWidth<768) {
+                              $('#subnav').removeClass('in');
+                              $rootScope.meatLaunch.turnOff();
+                            }
+                           $location.path('/meat/'+log);
+                           //$('#myTabContent').find('#home').html('pupiloo');
+                        });
+                       });
+                       }
+                     });
+               break;
+               case 'meat':
+                     $('#meatMsgs').append('<li class="list-group-item">'+data.user+':'+data.msg+'</li>');
+                     $('#meatMsgs').scrollTop($('#meatMsgs').prop('scrollHeight'));
+               break;
+               case 'sign_out':
+                     if (data.uname === $rootScope.uname)
+                        auth.logout();
+               break;
+               case 'sign_up_fail':
+                     var panel = document.getElementById('signupPanelBody');
+                     var div = document.createElement('div');
+                     var btn = document.createElement('button');
+                     var msg = document.createElement('p');
+                     div.className = 'alert alert-danger alert-dismissable';
+                     btn.type = 'button';
+                     btn.className = 'close';
+                     btn.dataset.dismiss = 'alert';
+                     btn.innerHTML = '&times;';
+                     msg.innerHTML = data.response.detail;
+                     div.appendChild(btn);
+                     div.appendChild(msg);
+                     panel.insertBefore(div, panel.firstChild);
+                     $scope.singup_email = document.getElementById('singup_email');
+                     $scope.singup_email.parentNode.childNodes[1].innerHTML = 'Email no valido';
+                     $scope.singup_email.parentNode.className = 'form-group has-error';
+                     $scope.singup_pssw = document.getElementById('singup_pssw');
+                     $scope.user_signup = document.getElementById('user_signup');
+                     $scope.singup_pssw.value = '';
+                     $scope.singup_pssw.parentNode.childNodes[1].innerHTML = 'Contraseña';
+                     $scope.singup_pssw.parentNode.className = 'form-group';
+                     $scope.user_signup.disabled = true;
+                     $rootScope.loading();
+               break;
+               case 'sign_up_ok':
+                  if (data.sid === $rootScope.sid)
+                    auth.login(data.response);
+               break;
+               case 'join':
+                 if (data.sid === $rootScope.sid)
+                      window.location.href = "/meat/"+data.room;
+               break;
+               case 'profile_fail':
+                  console.log(data.response);
+               break;
+               case 'profile_data':
+                  $scope.pemail = document.getElementById('pemail');
+                  $scope.pname = document.getElementById('pname');
+                  $scope.lname = document.getElementById('plastname');
+                  $scope.uname = document.getElementById('puname');
+                  $scope.dbirth = document.getElementById('dbirth');
+                  $scope.pic = document.getElementById('pic');
+                  if ($scope.pemail.value === '')
+                     $scope.pemail.value = data.response.mail;
+                  $scope.pname.value = data.response.pname;
+                  $scope.lname.value = data.response.lname;
+                  $scope.uname.value = data.response.uname;
+                  $scope.dbirth.value = data.response.dbirth;
+                  if ($scope.pic.src === '')
+                     $scope.pic.src = data.response.pic;
+               break;
+               }
+              }
+          };
+    }]);;'use strict';
+
+angular.module('sandflake', [
+  'ngRoute',
+  'sandflake.factories',
+  'sandflake.controllers',
+  'sandflake.directives'
+]).
+run(['$rootScope', '$http', '$location', function ($rootScope, $http, $location) {
+  $rootScope.state = 'loading';
+  $rootScope.included = 'loading';
+  var host = window.location.hostname;
+  var port = window.location.port;
+  if (port === 80)
+     $rootScope.socket = new WebSocket('ws://' + host);
+  else
+     $rootScope.socket = new WebSocket('ws://' + host+':'+port);
+}]).
+config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+  $routeProvider
+    .when('/', {
+      controller: 'app',
+      templateUrl: 'partials/app.html'
+    })
+    .when('/signup', {
+      controller: 'root',
+      templateUrl: 'partials/signup.html'
+    })
+    .when('/login', {
+      controller: 'root',
+      templateUrl: 'partials/signin.html'
+    })
+    .when('/profile', {
+      controller: 'profile',
+      templateUrl: 'partials/profile.html'
+    })
+    .when('/meat/:id', {
+      controller: 'meat',
+      templateUrl: 'partials/meat.html'
+    })
+    .when('/signout', {
+      controller: 'root',
+      templateUrl: 'partials/root.html'
+    })
+    .when('/app/:appNamed', {
+      controller: 'app',
+      templateUrl: 'partials/app.html'
+    })
+    .otherwise({
+      redirectTo: '/'
+    });
+  $locationProvider.html5Mode(true);
+}]);

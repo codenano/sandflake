@@ -2,11 +2,12 @@
 
 angular.module('sandflake.controllers', [
    'sandflake.app',
+   'sandflake.403',
    'sandflake.root',
    'sandflake.meat',
    'sandflake.profile'
    ]).
-  controller('sandflake', function($rootScope, $scope, $http, $location, auth){
+  controller('sandflake', ['$rootScope', '$scope', '$http', '$location', 'auth' ,function($rootScope, $scope, $http, $location, auth){
     $scope.homeLink = document.getElementById('logoapp');
     $rootScope.menuList = document.getElementById('menu_list');
     $scope.load = document.getElementById('load');
@@ -18,7 +19,7 @@ angular.module('sandflake.controllers', [
     $scope.redraw = function()
        {
        $('#meatList').css({ height: window.innerHeight+'px'});
-       $('#meatMsgs').css({ height: window.innerHeight-355+'px'});
+       $('#meatMsgs').css({ height: window.innerHeight-420+'px'});
        $('#upnav').css({width:window.innerWidth+'px'});
        $('#subnav').css({width:window.innerWidth+'px'});
        $('#meatlaunch').css({position:'absolute'});
@@ -30,10 +31,24 @@ angular.module('sandflake.controllers', [
         e.preventDefault();
         e.stopImmediatePropagation();
     });
+    $scope.escapeHtml = function (text) {
+      if (text) {
+        return text
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+    };
+    $scope.timeConverter = function(unixtime){
+        var newDate = new Date();
+        newDate.setTime(unixtime);
+        var dateString = newDate.toUTCString().split(' GMT')[0];
+        return dateString;
+        };
     $scope.rotate = function() {
-        // timeout increase degrees:
+        // Interval increase degrees:
         $scope.degree = 0;
-        $scope.timer = setInterval(function() {
+        $scope.timer = setTimeout(function() {
             $scope.degree++;
             $scope.$rota.css({ transform: 'rotate(' + $scope.degree + 'deg)'});
         },100);
@@ -42,17 +57,13 @@ angular.module('sandflake.controllers', [
       if ($rootScope.start) {
          $rootScope.start = false;
          $('.container-app').hide();
-         //$rootScope.menuList.style.display = 'none';
-         //$scope.homeLink.style.display = 'none';
          $scope.loadCont.style.display = 'block';
-         $scope.rotate();    // run it!
+         $scope.rotate();
          }
       else {
          clearInterval($scope.timer);
          $('.container-app').show();
          $rootScope.start = true;
-         //$rootScope.menuList.style.display = 'block';
-         //$scope.homeLink.style.display = 'block';
          $scope.loadCont.style.display = 'none';
          }
     };
@@ -70,18 +81,12 @@ angular.module('sandflake.controllers', [
        }, function(res){
               $('#meatlist').find('.dropdown-toggle').dropdown('toggle');
               if (res === 'on') {
-                 //$('body').addClass('hiddenOverflow');
                  $('#subnav').addClass('in');
                  $('#meatList').addClass('animated bounceInRight');
                  }
               else {
                    $('#meatList').removeClass('animated bounceInRight');
                    $('#subnav').removeClass('in');
-/*                   $rootScope.socket.send(JSON.stringify({
-                     room: 'main',
-                     type: 'leave'
-                   }));*/
-                   //$('body').removeClass('hiddenOverflow');
                    }
        });
     $('#meatlist').on('shown.bs.dropdown', function () {
@@ -159,7 +164,7 @@ angular.module('sandflake.controllers', [
         type: 'ping'
         };
       $rootScope.socket.send(JSON.stringify(log));
-      },3000);
+      },5000);
       };
     $rootScope.$on('$routeChangeStart', function(event, current, previous, rejection) {
       $rootScope.loadMenu();
@@ -174,7 +179,7 @@ angular.module('sandflake.controllers', [
             switch(data.type) {
                case 'start':
                       $rootScope.uname = data.uname;
-                      console.log(data.uname);
+                      console.log('%c'+$rootScope.uname, 'background: #222; color: #bada55');
                       $rootScope.menuItems = data.menu;
                       $rootScope.sid = data.sid;
                       var loginfo = document.getElementById('loginfo');
@@ -184,26 +189,19 @@ angular.module('sandflake.controllers', [
                       var loggedBar = document.getElementById('loggedBar');
                       var ml = document.getElementById('meatlaunch');
                       if ($rootScope.uname !== 'alien') {
+                          $rootScope.umail = data.mail;
+                          $rootScope.upic = data.pic;
                           $rootScope.socket.send(JSON.stringify({
                             room: 'main',
                             type: 'join'
                           }));
-                          //$(loggedInfo).empty();
                           $(ml).show();
                           $(loggedBar).empty();
-                           $(loggedBar).append('<i class="fa fa-power-off"></i>');
-                          $(loggedInfo).append('<li role="presentation"><a role="menuitem"><i class="fa fa-sign-out"></i> Exit</a><li>');
-                          $(loggedInfo).on('click', function(){
+                          $(loggedBar).append('<i class="fa fa-power-off"></i>');
+                          $(loggedInfo).append('<li role="presentation"><a id="signOut" role="menuitem"><i class="fa fa-sign-out"></i> Exit</a><li>');
+                          $('#signOut').on('click', function(){
                             auth.logout();
                             });
-                          $(loginfo).on('shown.bs.dropdown', function () {
-                            $(logoapp).addClass('hidden');
-                            $(menuList).addClass('hidden');
-                          });
-                          $(loginfo).on('hidden.bs.dropdown', function () {
-                            $(logoapp).removeClass('hidden');
-                            $(menuList).removeClass('hidden');
-                          });
                          }
                       else {
                           $(ml).hide();
@@ -241,38 +239,39 @@ angular.module('sandflake.controllers', [
                      if (data.sid === $rootScope.sid)
                         auth.login(data.response);
                break;
-               case 'twt_up':
-                     console.log(data);
-               break;
                case 'room:reject':
                      var log = data.response;
                      $('#meatList').empty();
                      $('#meatList').append('<p style="color:red;">You have a client conected</p>');
                break;
-               case 'room:read':
-                     console.log(data.response);
+               case 'room:main':
                      $('#meatList').empty();
                      _.each(data.response, function(item){
-                      if (item!=$rootScope.uname) {
+                      if (item!=$rootScope.umail) {
                        $('#meatList').append('<li class="meatItem" role="presentation"><a role="menuitem"><img src="images/icons/icon-16.png" />'+item+'</a></li>');
                        $('.meatItem').last().on('click', function(e){
                         $scope.$apply(function(){
-                           var monoid = [$rootScope.uname, item].sort();
+                           var monoid = [$rootScope.umail, item].sort();
                            var log = encodeURI(btoa(monoid[0]+':'+monoid[1]));
-                           if (window.innerWidth<768) {
-                              $('#subnav').removeClass('in');
-                              $rootScope.meatLaunch.turnOff();
-                            }
                            $location.path('/meat/'+log);
-                           //$('#myTabContent').find('#home').html('pupiloo');
                         });
                        });
                        }
                      });
                break;
+               case 'room:read':
+                     _.each(data.response.messages, function(item){
+                       var ust = item.key.split('!');
+                       var date = $scope.timeConverter(ust[0]);
+                       //<img src"'+ust[1]+'">
+                       if (item.value.msg!=='')
+                          $('#meatMsgs').append('<li class="list-group-item"><p class="text-justify hyphenate">'+transform($scope.escapeHtml(item.value.msg))+'</p><span class="timestamp">'+date+'</span></li>');
+                     });
+                     $('#meatMsgs').scrollTop($('#meatMsgs').prop('scrollHeight'));
+               break;
                case 'meat':
-                     console.log($location.path());
-                     $('#meatMsgs').append('<li class="list-group-item">'+data.user+':'+data.msg+'</li>');
+                     //'+data.user+'
+                     $('#meatMsgs').append('<li class="list-group-item"><p class="text-justify hyphenate">'+transform($scope.escapeHtml(data.msg))+'</p><span class="timestamp">'+$scope.timeConverter(Date.now())+'</span></li>');
                      $('#meatMsgs').scrollTop($('#meatMsgs').prop('scrollHeight'));
                break;
                case 'sign_out':
@@ -315,13 +314,20 @@ angular.module('sandflake.controllers', [
                case 'profile_fail':
                   console.log(data.response);
                break;
-               case 'profile_data':
+               case 'profile_pic':
                   console.log(data.response);
+                  $scope.pic.src = data.response.pic;
+                  window.location.href = "/profile";
+               break;
+               case 'profile_data':
                   $scope.pemail = document.getElementById('pemail');
                   $scope.pname = document.getElementById('pname');
                   $scope.lname = document.getElementById('plastname');
                   $scope.uname = document.getElementById('puname');
                   $scope.dbirth = document.getElementById('dbirth');
+                  $scope.dayBirthday = document.getElementById('dayBirthday');
+                  $scope.monthBirthday = document.getElementById('monthBirthday');
+                  $scope.yearBirthday = document.getElementById('yearBirthday');
                   $scope.pic = document.getElementById('pic');
                   if ($scope.pemail.value === '')
                      $scope.pemail.value = data.response.mail;
@@ -329,11 +335,17 @@ angular.module('sandflake.controllers', [
                   $scope.lname.value = data.response.lname;
                   $scope.uname.value = data.response.uname;
                   $scope.dbirth.value = data.response.dbirth;
+                  if (data.response.dbirth!==0) {
+                     $scope.dateArray = $scope.dbirth.value.split('/');
+                     $scope.dayBirthday.value = $scope.dateArray[0];
+                     $scope.monthBirthday.value = $scope.dateArray[1];
+                     $scope.yearBirthday.value = $scope.dateArray[2];
+                     }
                   if ($scope.pic.src === '')
                      $scope.pic.src = data.response.pic;
-                  console.log($scope.uname.value);
+                  $rootScope.loading();
                break;
                }
               }
           };
-    });
+    }]);

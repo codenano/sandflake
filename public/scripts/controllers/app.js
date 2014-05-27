@@ -1,11 +1,10 @@
 'use strict';
 angular.module('sandflake.app', []).
-  controller('app', function ($rootScope, $scope, $location, $http, $routeParams){
+  controller('app', ['$rootScope', '$scope', '$location', '$http', '$routeParams', function ($rootScope, $scope, $location, $http, $routeParams){
      $rootScope.start = true;
      $rootScope.loading();
      $scope.appNamed = $routeParams.appNamed;
      $scope.init = function(){
-        $rootScope.start = false;
         $rootScope.loading();
         $('.panel').addClass('animated bounceInDown');
 				};
@@ -16,4 +15,4 @@ angular.module('sandflake.app', []).
           $scope.init();
           }
        },100);
-  });
+  }]);

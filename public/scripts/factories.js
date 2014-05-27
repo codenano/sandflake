@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sandflake.factories', []).
-  factory('auth',function($rootScope, $http, $location, $window) {
+  factory('auth', ['$rootScope', '$http', '$location', '$window',function($rootScope, $http, $location, $window) {
     var login = function (uname) {
           $rootScope.isAuthenticated = true;
           $rootScope.uname = uname;
@@ -22,4 +22,4 @@ angular.module('sandflake.factories', []).
          login: login,
          logout: logout
        };
-  });
+  }]);

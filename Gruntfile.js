@@ -11,7 +11,16 @@ module.exports = function(grunt) {
                'public/scripts/lib/underscore/underscore.js',
                'public/scripts/lib/angular/angular.js',
                'public/scripts/lib/angular-route/angular-route.js',
-               'public/scripts/lib/bootstrap-sass/dist/js/bootstrap.js'],
+               'public/scripts/lib/bootstrap-sass/dist/js/bootstrap.js',
+               'public/scripts/directives.js',
+               'public/scripts/base/kudos.js',
+               'public/scripts/factories.js',
+               'public/scripts/controllers/app.js',
+               'public/scripts/controllers/profile.js',
+               'public/scripts/controllers/root.js',
+               'public/scripts/controllers/meat.js',
+               'public/scripts/controllers.js',
+               'public/scripts/app.js'],
         dest: 'public/scripts/dist/<%= pkg.name %>.js'
       }
     },

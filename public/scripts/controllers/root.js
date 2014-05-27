@@ -1,6 +1,6 @@
 'use strict';
 angular.module('sandflake.root', []).
-  controller('root', function ($rootScope, $scope, $location, $http){
+  controller('root', ['$rootScope', '$scope', '$location', '$http', function ($rootScope, $scope, $location, $http){
      $rootScope.start = true;
      $rootScope.loading();
      $scope.validateEmail = function(email, callback) {
@@ -148,7 +148,6 @@ angular.module('sandflake.root', []).
                           };
                      break;
                      }
-        $rootScope.start = false;
         $rootScope.loading();
         $('.panel').addClass('animated bounceInDown');
 				};
@@ -163,4 +162,4 @@ angular.module('sandflake.root', []).
              });
           }
        },100);
-    });
+    }]);
