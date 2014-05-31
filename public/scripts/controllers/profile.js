@@ -60,7 +60,7 @@ angular.module('sandflake.profile', []).
                 $rootScope.loading();
                 $rootScope.socket.send(JSON.stringify({
                   type: 'profile:upload',
-                  uname: $rootScope.umail,
+                  uname: $rootScope.uname,
                   image: evt.target.result,
                   imageType: typeResult[1]
                   }));

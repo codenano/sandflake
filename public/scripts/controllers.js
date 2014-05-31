@@ -284,7 +284,7 @@ angular.module('sandflake.controllers', [
                   $scope.yearBirthday = document.getElementById('yearBirthday');
                   $scope.pic = document.getElementById('pic');
                   if ($scope.pemail.value === '')
-                     $scope.pemail.value = data.response.mail;
+                     $scope.pemail.value = data.response.umail;
                   $scope.pname.value = data.response.pname;
                   $scope.lname.value = data.response.lname;
                   $scope.uname.value = data.response.uname;
