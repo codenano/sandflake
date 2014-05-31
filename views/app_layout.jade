@@ -8,53 +8,29 @@ html(ng-app='sandflake')
     base(href='/')
     link(rel='shortcut icon', href='/images/favicon.png')
     link(rel='stylesheet', href='/scripts/lib/bootstrap-sass/dist/css/bootstrap.min.css')
-    
     link(rel='stylesheet', href='/scripts/lib/font-awesome/css/font-awesome.min.css')
-    link(rel='stylesheet', href='/scripts/lib/famous-angular/dist/famous-angular.css')
+    link(rel='stylesheet', content-type="text/css" href='/scripts/css/cal-heatmap.css')
     link(rel='stylesheet', content-type="text/css" href='/scripts/css/app.css')
     body(ng-controller='sandflake')
-      nav(class='navbar navbar-default navbar-fixed-top' role='navigation')
-       .container-fluid
-        a(id='logoapp' class='navbar-brand logoapp')
-        ul(id='menu_list' class='nav navbar-nav')
-        ul(class='nav navbar-nav navbar-right')
-          li#loginfo.dropdown
-           a#loggedBar.navbar-link.dropdown-toggle(data-toggle="dropdown")
-           ul#loggedInfo.dropdown-menu.dropdown-menu
-      #loadCont
-        #load
-      #meatlaunch.kudos
+      block upnav
       block content
-      nav(id='downnav' class='navbar navbar-default navbar-fixed-bottom' role='navigation')
-        .container-fluid
-            .navbar-header
-              button(id='subnavCollapse' type='button' class='navbar-toggle' data-toggle='collapse' data-target='#subnav')
-                .sr-only
-                  Toggle navigation
-                 span(class='icon-bar')
-            div(class='collapse nav-collapse' id='subnav')
-              ul(class='nav navbar-nav')
-              ul(id='subnavCont' class='nav navbar-nav navbar-right')
-                  li#meatlist.dropdown
-                   a.navbar-link.dropdown-toggle(data-toggle='dropdown')
-                   ul#meatList.dropdown-menu
+      block downnav
   //
    script(src='/scripts/dist/sandflake.min.js')
 
-   
 
   script(src='/scripts/dist/h2o.min.js')
-  script(src='/scripts/lib/requirejs/require.js')
-  script
-    require.config({baseUrl: '/scripts/lib/'});
+  script(src='/scripts/lib/jquery-mousewheel/jquery.mousewheel.js')
+  script(src='/scripts/lib/d3/d3.js')
+  script(src='/scripts/base/cal-heatmap.js')
   script(src='/scripts/directives.js')
   script(src='/scripts/base/kudos.js')
   script(src='/scripts/base/transform.js')
   script(src='/scripts/factories.js')
   script(src='/scripts/controllers/app.js')
   script(src='/scripts/controllers/profile.js')
-  script(src='/scripts/controllers/root.js')
-  script(src='/scripts/controllers/c403.js')
+  script(src='/scripts/controllers/signup.js')
+  script(src='/scripts/controllers/login.js')
   script(src='/scripts/controllers/meat.js')
   script(src='/scripts/controllers.js')
   script(src='/scripts/app.js')

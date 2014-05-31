@@ -9,14 +9,13 @@ angular.module('sandflake.factories', []).
           window.location.href = '/';
        };
     var logout = function() {
-       var log = {
-         type: 'signOut',
+       $rootScope.socket.send(JSON.stringify({
+         type: 'signout',
          uname: $rootScope.uname
-         };
-       $rootScope.socket.send(JSON.stringify(log));
+         }));
        $rootScope.isAuthenticated = false;
        $rootScope.uname = 'alien';
-       window.location.href = '/signout';
+       window.location.href = '/';
        };
        return {
          login: login,

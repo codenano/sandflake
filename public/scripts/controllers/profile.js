@@ -38,6 +38,10 @@ angular.module('sandflake.profile', []).
           }
      }
      $scope.init = function(){
+        $rootScope.socket.send(JSON.stringify({
+          type: 'profile:get',
+          uname: $rootScope.uname
+          }));
         $('#editProfilePic').on('show.bs.modal', function (e) {
           $("body").css('overflow', 'hidden');
         });
@@ -72,15 +76,11 @@ angular.module('sandflake.profile', []).
        if ($rootScope.state === 'start') {
           clearInterval($scope.intervalLoad);
           if ($rootScope.uname !== 'alien') {
-             $rootScope.socket.send(JSON.stringify({
-               type: 'profile:get',
-               uname: $rootScope.umail
-               }));
              $scope.init();
              }
           else
              $scope.$apply(function(){
-               $location.path("/");
+               $location.path("/login");
              });
           }
        },100);

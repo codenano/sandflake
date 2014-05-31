@@ -23,12 +23,12 @@ config(['$routeProvider', '$locationProvider', function ($routeProvider, $locati
       templateUrl: 'partials/app.html'
     })
     .when('/signup', {
-      controller: 'root',
+      controller: 'signup',
       templateUrl: 'partials/signup.html'
     })
     .when('/login', {
-      controller: 'root',
-      templateUrl: 'partials/signin.html'
+      controller: 'login',
+      templateUrl: 'partials/login.html'
     })
     .when('/profile', {
       controller: 'profile',
@@ -38,13 +38,9 @@ config(['$routeProvider', '$locationProvider', function ($routeProvider, $locati
       controller: 'meat',
       templateUrl: 'partials/meat.html'
     })
-    .when('/signout', {
-      controller: 'root',
-      templateUrl: 'partials/root.html'
-    })
     .when('/app/:appNamed', {
-      controller: '403',
-      templateUrl: 'partials/403.html'
+      controller: 'app',
+      templateUrl: 'partials/app.html'
     })
     .otherwise({
       redirectTo: '/'

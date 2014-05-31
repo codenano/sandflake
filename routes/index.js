@@ -1,7 +1,7 @@
 'use strict';
-module.exports = function (app, h2o) {
+module.exports = function (app, socket) {
   //dependencies
-  app.get('/', h2o.isLoggedIn, function (req, res) {
+  app.get('/', socket.isLoggedIn, function (req, res) {
     //
     /*
     Get ip
@@ -13,7 +13,7 @@ module.exports = function (app, h2o) {
     */
     res.render('app');
   });
-  app.get('/signup', h2o.isLoggedIn, function (req, res) {
+  app.get('/signup', socket.isLoggedIn, function (req, res) {
     req.session.get('uname', function(err, sess){
         if (sess === 'alien')
            res.render('app');
@@ -21,12 +21,12 @@ module.exports = function (app, h2o) {
            res.redirect('/');
     });
   });
-  app.get('/signout', h2o.isLoggedIn, function (req, res) {
+  app.get('/signout', socket.isLoggedIn, function (req, res) {
     req.session.set('uname', 'alien',function(err, sess){
         res.redirect('/');
     });
   });
-  app.get('/login', h2o.isLoggedIn, function (req, res) {
+  app.get('/login', socket.isLoggedIn, function (req, res) {
     req.session.get('uname', function(err, sess){
         if (sess === 'alien')
            res.render('app');
@@ -34,7 +34,7 @@ module.exports = function (app, h2o) {
            res.redirect('/');
     });
   });
-  app.get('/profile', h2o.isLoggedIn, function (req, res) {
+  app.get('/profile', socket.isLoggedIn, function (req, res) {
     req.session.get('uname', function(err, sess){
         if (sess !== 'alien')
            res.render('app');
@@ -42,7 +42,7 @@ module.exports = function (app, h2o) {
            res.redirect('/');
     });
   });
-  app.get('/meat/:id', h2o.isLoggedIn, function (req, res) {
+  app.get('/meat/:id', socket.isLoggedIn, function (req, res) {
     req.session.get('uname', function(err, sess){
         if (sess !== 'alien')
            res.render('app');
@@ -50,7 +50,7 @@ module.exports = function (app, h2o) {
            res.redirect('/');
     });
   });
-  app.get('/app/:appNamed', h2o.isLoggedIn, function (req, res) {
+  app.get('/app/:appNamed', socket.isLoggedIn, function (req, res) {
     res.render('app');
   });
 };

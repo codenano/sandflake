@@ -12,7 +12,13 @@ angular.module('sandflake.app', []).
      $scope.intervalLoad = setInterval(function(){
        if ($rootScope.state === 'start') {
           clearInterval($scope.intervalLoad);
-          $scope.init();
+          if ($rootScope.uname !== 'alien') {
+             $scope.init();
+             }
+          else
+             $scope.$apply(function(){
+               $location.path("/login");
+             });
           }
        },100);
   }]);

@@ -1,5 +1,5 @@
   <div class="message-content">
-      <div contentEditable="true" name="message" id="meatmsg" class="form-control hyphenate"></div>
+      <div contentEditable="true" ng-keyup="meatPress($event)" name="message" id="meatmsg" class="form-control hyphenate"></div>
       <input type="hidden" name="_csrf" value="#{csrf}"/>
       <input type="hidden" name="fingerprint" id="fp"/>
       <input type="hidden" name="userid" id="userid"/>

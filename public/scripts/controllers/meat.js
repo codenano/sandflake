@@ -5,22 +5,24 @@ angular.module('sandflake.meat', []).
      $rootScope.loading();
      $scope.roomId = $routeParams.id;
      $scope.idArray  = atob(decodeURI($scope.roomId)).split(':');
-     if ($scope.idArray[0]===$rootScope.umail)
+     if ($scope.idArray[0]===$rootScope.uname)
         $scope.room = $scope.idArray[1];
      else
         $scope.room = $scope.idArray[0];
      $scope.$on('$routeChangeStart', function(event, current, previous, rejection) {
       $('body, html').css({overflowY:'auto'});
-        var log = {
-        room: $scope.roomId,
-        type: 'leave'
-        };
-      $rootScope.socket.send(JSON.stringify(log));
+      $('.meatItem').each(function(){
+        $(this).removeClass('active');
+      });
+      $rootScope.socket.send(JSON.stringify({
+        type: 'room:leave',
+        room: $scope.roomId
+        }));
      });
      $scope.init = function(){
         $rootScope.socket.send(JSON.stringify({
-                room: $scope.roomId,
-                type: 'join'
+                type: 'room:join',
+                room: $scope.roomId
         }));
         $('body, html').css({overflowY:'hidden'});
         $('#meatMsgs').css({height: (window.innerHeight-420).toString()+'px', overflowY: 'scroll'});
@@ -38,22 +40,30 @@ angular.module('sandflake.meat', []).
 /*        $('#meatmsg').blur(function(){
           $(this).css({height: '50px'});
         });*/
-        $('#meatmsg').keypress(function(e){
-          if ((e.charCode === 13)||(e.keyCode === 13)) {
-             $scope.sendMeat();
-             return false;
-           }
-        });
+
         $rootScope.loading();
         $('.panel').addClass('animated bounceInRight');
         $timeout(function(){
           $('#meatmsg').focus();
         },1000);
 				};
+      $scope.meatPress = function(e){
+        if ((e.charCode === 13)||(e.keyCode === 13)) {
+           e.preventDefault();
+           e.stopImmediatePropagation();
+           $scope.sendMeat();
+           return false;
+           }
+        };
       $scope.sendMeat = function(e){
-        if ($('#meatmsg').text()!=='')
-          $rootScope.socket.send(JSON.stringify({type: 'meat', room: $scope.roomId, msg: $('#meatmsg').text(), user: $rootScope.umail}));
-        $('#meatmsg').text('');
+        if ($('#meatmsg').text()!=='') {
+           var meatMsg = $('#meatmsg').text();
+           $('#meatmsg').text('');
+           $rootScope.socket.send(JSON.stringify({type: 'room:meat', room: $scope.roomId, msg: meatMsg, user: $rootScope.uname}));
+           
+           
+        }
+        
         };
      $scope.intervalLoad = setInterval(function(){
        if ($rootScope.state === 'start') {
@@ -63,7 +73,7 @@ angular.module('sandflake.meat', []).
              }
           else
              $scope.$apply(function(){
-               $location.path("/");
+               $location.path("/login");
              });
           }
        },100);

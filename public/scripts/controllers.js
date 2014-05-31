@@ -2,15 +2,13 @@
 
 angular.module('sandflake.controllers', [
    'sandflake.app',
-   'sandflake.403',
-   'sandflake.root',
+   'sandflake.signup',
+   'sandflake.login',
    'sandflake.meat',
    'sandflake.profile'
    ]).
   controller('sandflake', ['$rootScope', '$scope', '$http', '$location', 'auth' ,function($rootScope, $scope, $http, $location, auth){
-    $scope.homeLink = document.getElementById('logoapp');
-    $rootScope.menuList = document.getElementById('menu_list');
-    $scope.load = document.getElementById('load');
+    $rootScope.menuList = document.getElementById('menuList');
     $scope.loadCont = document.getElementById('loadCont');
     $rootScope.heartbeats = 0;
     $scope.currentLink = $scope.homeLink;
@@ -26,10 +24,10 @@ angular.module('sandflake.controllers', [
        };
     $scope.debouncedRedraw = _.debounce($scope.redraw, 100);
     $(window).on('resize', $scope.debouncedRedraw);
-    $('#subnavCollapse').css('display', 'none');
-    $('#subnavCollapse').on('click', function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
+       $('#subnavCollapse').css('display', 'none');
+       $('#subnavCollapse').on('click', function(e){
+       e.preventDefault();
+       e.stopImmediatePropagation();
     });
     $scope.escapeHtml = function (text) {
       if (text) {
@@ -38,6 +36,15 @@ angular.module('sandflake.controllers', [
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
       }
+    };
+    $scope.playSound = function () {
+              if ($scope.drop) {
+                  if($scope.drop.paused) $scope.drop.play();
+                  else $scope.drop.pause();
+              } else {
+                  $scope.drop = new Audio('sound/drop.mp3');
+                  $scope.drop.play();
+              }
     };
     $scope.timeConverter = function(unixtime){
         var newDate = new Date();
@@ -67,9 +74,6 @@ angular.module('sandflake.controllers', [
          $scope.loadCont.style.display = 'none';
          }
     };
-    $scope.homeLink.addEventListener('click', function(){
-      $scope.currentLink.className = '';
-      });
     $rootScope.meatLaunch = new Kudos({
          el : '#meatlaunch',
          duration : 800,
@@ -81,6 +85,7 @@ angular.module('sandflake.controllers', [
        }, function(res){
               $('#meatlist').find('.dropdown-toggle').dropdown('toggle');
               if (res === 'on') {
+                 $('#meatList').css({ height: window.innerHeight});
                  $('#subnav').addClass('in');
                  $('#meatList').addClass('animated bounceInRight');
                  }
@@ -89,18 +94,13 @@ angular.module('sandflake.controllers', [
                    $('#subnav').removeClass('in');
                    }
        });
-    $('#meatlist').on('shown.bs.dropdown', function () {
-      $('#meatList').css({ height: window.innerHeight});
-    });
     $('#meatlist').on('hide.bs.dropdown', function (e) {
       e.preventDefault();
       e.stopImmediatePropagation();
     });
-    $('#logoapp').on('click', function(){
-        $scope.$apply(function(){
-          $location.path("/");
-        });
-      });
+    $scope.go = function ( path ) {
+      $location.path( path );
+    };
     $rootScope.loadMenu = function(){
       if ($rootScope.state === 'loading')
         _.each($rootScope.menuItems, function(value){
@@ -153,18 +153,16 @@ angular.module('sandflake.controllers', [
 
     };
     $rootScope.socket.onopen = function (wss) {
-      var log = {
-        app: $rootScope.app,
-        type: 'start'
-        };
-    $rootScope.socket.send(JSON.stringify(log));
+      $rootScope.socket.send(JSON.stringify({
+          app: $rootScope.app,
+          type: 'app:start'
+          }));
       setInterval(function(){
-      var log = {
-        app: $rootScope.app,
-        type: 'ping'
-        };
-      $rootScope.socket.send(JSON.stringify(log));
-      },5000);
+         $rootScope.socket.send(JSON.stringify({
+           app: $rootScope.app,
+           type: 'ping'
+           }));
+         },5000);
       };
     $rootScope.$on('$routeChangeStart', function(event, current, previous, rejection) {
       $rootScope.loadMenu();
@@ -177,43 +175,52 @@ angular.module('sandflake.controllers', [
         var data = JSON.parse(event.data);
           if ((data)&&(data.type)){
             switch(data.type) {
-               case 'start':
-                      $rootScope.uname = data.uname;
-                      console.log('%c'+$rootScope.uname, 'background: #222; color: #bada55');
-                      $rootScope.menuItems = data.menu;
-                      $rootScope.sid = data.sid;
-                      var loginfo = document.getElementById('loginfo');
-                      var logoapp = document.getElementById('logoapp');
-                      var menuList = document.getElementById('menu_list');
-                      var loggedInfo = document.getElementById('loggedInfo');
-                      var loggedBar = document.getElementById('loggedBar');
-                      var ml = document.getElementById('meatlaunch');
-                      if ($rootScope.uname !== 'alien') {
-                          $rootScope.umail = data.mail;
-                          $rootScope.upic = data.pic;
-                          $rootScope.socket.send(JSON.stringify({
-                            room: 'main',
-                            type: 'join'
-                          }));
-                          $(ml).show();
-                          $(loggedBar).empty();
-                          $(loggedBar).append('<i class="fa fa-power-off"></i>');
-                          $(loggedInfo).append('<li role="presentation"><a id="signOut" role="menuitem"><i class="fa fa-sign-out"></i> Exit</a><li>');
-                          $('#signOut').on('click', function(){
+               case 'app:start':
+                    $rootScope.uname = data.uname;
+                    console.log('%c'+$rootScope.uname, 'background: #222; color: #bada55');
+                    $rootScope.menuItems = data.menu;
+                    $rootScope.sid = data.sid;
+                    var authInfo = document.getElementById('authInfo');
+                    var authBar = document.getElementById('authBar');
+                    var ml = document.getElementById('meatlaunch');
+                    if ($rootScope.uname !== 'alien') {
+                        $rootScope.umail = data.mail;
+                        $rootScope.upic = data.pic;
+                        $rootScope.socket.send(JSON.stringify({
+                          type: 'room:join',
+                          room: 'main'
+                        }));
+                        $(ml).show();
+                        $(authBar).empty();
+                        $(authBar).append('<i class="fa fa-power-off"></i>');
+                        $(authInfo).append('<li role="presentation"><a id="logout" role="menuitem"><i class="fa fa-sign-out"></i> Exit</a><li>');
+                          $('#logout').on('click', function(){
                             auth.logout();
                             });
                          }
                       else {
                           $(ml).hide();
-                          $(loggedBar).empty().hide();
+                          $(authBar).empty().hide();
                          }
                       $rootScope.loadMenu();
                       $rootScope.state = 'start';
                break;
                case 'pong':
-                    $rootScope.heartbeats++;
+                     $rootScope.heartbeats++;
                break;
-               case 'sign_in_fail':
+               case 'signout':
+                     if (data.uname === $rootScope.uname)
+                       auth.logout();
+               break;
+               case 'signup:data':
+                     if (data.sid === $rootScope.sid)
+                       auth.login(data.response);
+               break;
+               case 'signin:data':
+                     if (data.sid === $rootScope.sid)
+                       auth.login(data.response);
+               break;
+               case 'signin:fail':
                      var panel = document.getElementById('signinPanelBody');
                      var div = document.createElement('div');
                      var btn = document.createElement('button');
@@ -230,55 +237,11 @@ angular.module('sandflake.controllers', [
                      $scope.singin_pssw = document.getElementById('singin_pssw');
                      $scope.user_signin = document.getElementById('user_signin');
                      $scope.singin_pssw.value = '';
-                     //$scope.singin_pssw.parentNode.childNodes[1].innerHTML = 'Contraseña';
                      $scope.singin_pssw.parentNode.className = 'form-group';
                      $scope.user_signin.disabled = true;
                      $rootScope.loading();
                break;
-               case 'sign_in_ok':
-                     if (data.sid === $rootScope.sid)
-                        auth.login(data.response);
-               break;
-               case 'room:reject':
-                     var log = data.response;
-                     $('#meatList').empty();
-                     $('#meatList').append('<p style="color:red;">You have a client conected</p>');
-               break;
-               case 'room:main':
-                     $('#meatList').empty();
-                     _.each(data.response, function(item){
-                      if (item!=$rootScope.umail) {
-                       $('#meatList').append('<li class="meatItem" role="presentation"><a role="menuitem"><img src="images/icons/icon-16.png" />'+item+'</a></li>');
-                       $('.meatItem').last().on('click', function(e){
-                        $scope.$apply(function(){
-                           var monoid = [$rootScope.umail, item].sort();
-                           var log = encodeURI(btoa(monoid[0]+':'+monoid[1]));
-                           $location.path('/meat/'+log);
-                        });
-                       });
-                       }
-                     });
-               break;
-               case 'room:read':
-                     _.each(data.response.messages, function(item){
-                       var ust = item.key.split('!');
-                       var date = $scope.timeConverter(ust[0]);
-                       //<img src"'+ust[1]+'">
-                       if (item.value.msg!=='')
-                          $('#meatMsgs').append('<li class="list-group-item"><p class="text-justify hyphenate">'+transform($scope.escapeHtml(item.value.msg))+'</p><span class="timestamp">'+date+'</span></li>');
-                     });
-                     $('#meatMsgs').scrollTop($('#meatMsgs').prop('scrollHeight'));
-               break;
-               case 'meat':
-                     //'+data.user+'
-                     $('#meatMsgs').append('<li class="list-group-item"><p class="text-justify hyphenate">'+transform($scope.escapeHtml(data.msg))+'</p><span class="timestamp">'+$scope.timeConverter(Date.now())+'</span></li>');
-                     $('#meatMsgs').scrollTop($('#meatMsgs').prop('scrollHeight'));
-               break;
-               case 'sign_out':
-                     if (data.uname === $rootScope.uname)
-                        auth.logout();
-               break;
-               case 'sign_up_fail':
+               case 'signup:fail':
                      var panel = document.getElementById('signupPanelBody');
                      var div = document.createElement('div');
                      var btn = document.createElement('button');
@@ -288,7 +251,7 @@ angular.module('sandflake.controllers', [
                      btn.className = 'close';
                      btn.dataset.dismiss = 'alert';
                      btn.innerHTML = '&times;';
-                     msg.innerHTML = data.response.detail;
+                     msg.innerHTML = data.response;
                      div.appendChild(btn);
                      div.appendChild(msg);
                      panel.insertBefore(div, panel.firstChild);
@@ -303,23 +266,14 @@ angular.module('sandflake.controllers', [
                      $scope.user_signup.disabled = true;
                      $rootScope.loading();
                break;
-               case 'sign_up_ok':
-                  if (data.sid === $rootScope.sid)
-                    auth.login(data.response);
-               break;
-               case 'join':
-                 if (data.sid === $rootScope.sid)
-                      window.location.href = "/meat/"+data.room;
-               break;
-               case 'profile_fail':
+               case 'profile:fail':
                   console.log(data.response);
                break;
-               case 'profile_pic':
-                  console.log(data.response);
-                  $scope.pic.src = data.response.pic;
-                  window.location.href = "/profile";
+               case 'profile:pic':
+                  $scope.pic.src = data.response.pic+'?'+Date.now().toString();
+                  $rootScope.loading();
                break;
-               case 'profile_data':
+               case 'profile:data':
                   $scope.pemail = document.getElementById('pemail');
                   $scope.pname = document.getElementById('pname');
                   $scope.lname = document.getElementById('plastname');
@@ -344,6 +298,47 @@ angular.module('sandflake.controllers', [
                   if ($scope.pic.src === '')
                      $scope.pic.src = data.response.pic;
                   $rootScope.loading();
+               break;
+               case 'room:main':
+                     $('#meatList').empty();
+                     _.each(data.response, function(item){
+                      if (item.umail!==$rootScope.uname) {
+                       $('#meatList').append('<li class="meatItem" role="presentation"><a role="menuitem"><img src="'+
+                          item.pic+'?'+Date.now().toString()+'" />'+
+                          item.uname+'</a></li>');
+                       $('.meatItem').last().on('click', function(e){
+                          $(this).addClass('active');
+                          $scope.$apply(function(){
+                             var monoid = [$rootScope.uname, item.umail].sort();
+                             var log = encodeURI(btoa(monoid[0]+':'+monoid[1]));
+                             $location.path('/meat/'+log);
+                          });
+                       });
+                       }
+                     });
+               break;
+               case 'room:read':
+                     _.each(data.response.messages, function(item){
+                       var ust = item.msg.key.split('!');
+                       var date = $scope.timeConverter(ust[0]);
+                       if (item.msg.value.msg!=='')
+                          $('#meatMsgs').append('<li class="list-group-item"><img src="'+
+                          item.profile.pic+'" /><p class="text-justify hyphenate">'+
+                          transform($scope.escapeHtml(item.msg.value.msg))+'</p><span class="timestamp">'+
+                          item.profile.uname+' <i class="fa fa-paper-plane"></i> '+
+                          date+'</span></li>');
+                     });
+                     $('#meatMsgs').scrollTop($('#meatMsgs').prop('scrollHeight'));
+               break;
+               case 'room:meat':
+                     if (data.profile.umail!==$rootScope.uname)
+                        $scope.playSound();
+                     $('#meatMsgs').append('<li class="list-group-item"><img src="'+
+                        data.profile.pic+'" /><p class="text-justify hyphenate">'+
+                        transform($scope.escapeHtml(data.msg.msg))+'</p><span class="timestamp">'+
+                        data.profile.uname+' <i class="fa fa-paper-plane"></i> '+
+                        $scope.timeConverter(Date.now())+'</span></li>');
+                     $('#meatMsgs').scrollTop($('#meatMsgs').prop('scrollHeight'));
                break;
                }
               }
