@@ -19,8 +19,8 @@ run(['$rootScope', '$http', '$location', function ($rootScope, $http, $location)
 config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
-      controller: 'app',
-      templateUrl: 'partials/app.html'
+      controller: 'root',
+      templateUrl: 'partials/root.html'
     })
     .when('/signup', {
       controller: 'signup',

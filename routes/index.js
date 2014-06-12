@@ -1,6 +1,5 @@
 'use strict';
 module.exports = function (app, socket) {
-  //dependencies
   app.get('/', socket.isLoggedIn, function (req, res) {
     //
     /*

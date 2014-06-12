@@ -1,5 +1,5 @@
 html, body {
-   overflow-y:auto;
+   overflow-y:hidden;
   height:100%;
   width:100%;
   overflow-x:hidden;
@@ -15,6 +15,7 @@ body {
   background-color:whitesmoke;
   
 }
+
 /*
 
 Tabs
@@ -89,14 +90,17 @@ Bootstrap
    -o-transition: all 600ms;
    transition: all 600ms;
    display: block;
-
-   margin-top:6em;
-   margin-bottom:10em;
+   margin-top: 3.6em;
+   /*padding:0;*/
+   margin-bottom:0;
    z-index:1020;
    background-color:rgba(255,255,255,0.2);
    }
 .panel-footer {
   padding:0;
+}
+.panel-heading {
+  border-radius:0;
 }
  .modal-backdrop {
    z-index:1032;
@@ -144,6 +148,7 @@ Menu auth
 */
 #authInfo {
   cursor:pointer;
+  z-index:9999;
 }
 #authInfo li a:hover{
   background-color: #ccc;
@@ -310,11 +315,26 @@ User List
 #launchProfileEdit:hover {
   color:#3A3A3A;
 }
-#profilePic{
- margin-top:2em;
-margin-bottom:2em;
+#wrap {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    
 }
 
+.info {
+    background: #fff;
+    color: #FFF;
+    padding: 20px;
+    position: absolute;
+    visibility: hidden;
+    width:300px;
+    color:#000;
+}
+
+#pic {
+  height:200px;
+}
 #meatList {
 background-color:rgba(255,255,255,1);
 padding-bottom:3.5em;
@@ -332,9 +352,12 @@ overflow-y:auto;
 }
 
 @media (max-width: 991px) {
+.panel {
+  margin-right:0 !important;
+}
 #meatList  {
-  height:130px;
-  max-height:130px;
+  height:200px;
+  max-height:200px;
   width:100% !important;
 }
 #meatlist {

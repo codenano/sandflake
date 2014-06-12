@@ -50,7 +50,7 @@ angular.module('sandflake.profile', []).
         });
         $('#launchProfileEdit').on('click', function(e) {
          $('#profileUpload').click();
-        })
+        });
         $('#profileUpload').on('change', function(e){
             var file = e.originalEvent.target.files[0],
                 reader = new FileReader();
@@ -71,6 +71,27 @@ angular.module('sandflake.profile', []).
             reader.readAsDataURL(file);
         });
         $('.panel').addClass('animated bounceInDown');
+        $('#appPanelBody').css({height: window.innerHeight-100+'px', overflowY: 'scroll'});
+        if ($('#subnav').hasClass('in'))
+           $('.panel').css({marginRight: '11.3em'});
+        $("#wrap").hover(function() {
+            var imgWidth = $(this).children("img").width();
+            var imgHeight = $(this).children("img").height();
+            var negImgWidth = imgWidth - imgWidth - imgWidth;
+            $(this).children(".info").fadeTo(0, 0.8);
+            $(this).css("width", (imgWidth)+"px");
+            $(this).css("height", (imgHeight)+"px");
+            $(this).children(".info").css("width", (imgWidth)+"px");
+            $(this).children(".info").css("height", (imgHeight)+"px");
+            $(this).children(".info").css("left", negImgWidth+"px");
+            $(this).children(".info").css("visibility", "visible");
+            $(this).children(".info").animate({"left": 0}, 250);
+        }, function() {
+            var imgWidth = $(this).children("img").width();
+            var imgHeight = $(this).children("img").height();
+            var negImgWidth = imgWidth - imgWidth - imgWidth;
+            $(this).children(".info").animate({"left": negImgWidth}, 250);
+        });
 				};
      $scope.intervalLoad = setInterval(function(){
        if ($rootScope.state === 'start') {

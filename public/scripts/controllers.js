@@ -2,6 +2,7 @@
 
 angular.module('sandflake.controllers', [
    'sandflake.app',
+   'sandflake.root',
    'sandflake.signup',
    'sandflake.login',
    'sandflake.meat',
@@ -16,8 +17,9 @@ angular.module('sandflake.controllers', [
     $scope.timer;
     $scope.redraw = function()
        {
-       $('#meatList').css({ height: window.innerHeight+'px'});
-       $('#meatMsgs').css({ height: window.innerHeight-420+'px'});
+       $('#meatList').css({ height: window.innerHeight-51+'px'});
+       $('#meatMsgs').css({ height: window.innerHeight-170+'px'});
+       $('#appPanelBody').css({height: window.innerHeight-110+'px', overflowY: 'scroll'});
        $('#upnav').css({width:window.innerWidth+'px'});
        $('#subnav').css({width:window.innerWidth+'px'});
        $('#meatlaunch').css({position:'absolute'});
@@ -26,8 +28,6 @@ angular.module('sandflake.controllers', [
     $(window).on('resize', $scope.debouncedRedraw);
        $('#subnavCollapse').css('display', 'none');
        $('#subnavCollapse').on('click', function(e){
-       e.preventDefault();
-       e.stopImmediatePropagation();
     });
     $scope.escapeHtml = function (text) {
       if (text) {
@@ -85,13 +85,15 @@ angular.module('sandflake.controllers', [
        }, function(res){
               $('#meatlist').find('.dropdown-toggle').dropdown('toggle');
               if (res === 'on') {
-                 $('#meatList').css({ height: window.innerHeight});
+                 $('#meatList').css({ height: window.innerHeight-51+'px'});
                  $('#subnav').addClass('in');
                  $('#meatList').addClass('animated bounceInRight');
+                 $('.panel').css({marginRight: '11.3em'});
                  }
               else {
                    $('#meatList').removeClass('animated bounceInRight');
                    $('#subnav').removeClass('in');
+                   $('.panel').css({marginRight: '0'});
                    }
        });
     $('#meatlist').on('hide.bs.dropdown', function (e) {

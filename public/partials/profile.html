@@ -19,26 +19,20 @@
 </div>
 <div class="container-fluid container-app">
   <div class="row-container">
-   <div class="col-xs-1 col-md-3 col-lg-2"></div>
-   <div class="col-xs-10 col-md-6 col-lg-8">
     <div class="panel panel-default">
       <div class="panel-heading"><h4>Profile</h4></div>
         <div id="appPanelBody" class="panel-body">
-           <div class="row">
-             <div class="col-sm-1 col-md-2 col-lg-4"></div>
-             <div class="col-sm-10 col-md-8 col-lg-4">
-               <div id="profilePic" class="panel panel-primary transparent">
-                 <input type="file" id="profileUpload" style="display:none;">
-                 <div class="panel-heading" style="padding-bottom: 20px;"><p><i id="launchProfileEdit" class="fa fa-pencil pull-right"></i></p></div>
-                 <div class="panel-body">
-                    <img class="col-xs-12 col-md-12 col-lg-12" id="pic">
+           <div class="row-fluid">
+               <div id="wrap">
+                 <div class="info">
+                   <input type="file" id="profileUpload" style="display:none;">
+                   <p><i id="launchProfileEdit" class="fa fa-pencil pull-right"></i></p>
                  </div>
+                 <img id="pic">
                </div>
              </div>
-           </div>
            <form name="profileForm" id="profileForm" role="form" ng-submit="updateProfile($event)" ng-include="'/partials/includes/profile_form.html'"></form>
-        </div>
-    </div>
+           </div>
    </div>
   </div>
 </div>

@@ -1,34 +1,27 @@
 doctype html
 html(ng-app='sandflake')
   head
-    title
+    title 403
     meta(content='width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0', name='viewport')
     meta(content='yes', name='apple-mobile-web-app-capable')
     meta(content='chrome=1', http-equiv='X-UA-Compatible')
     base(href='/')
     link(rel='shortcut icon', href='/images/favicon.png')
     link(rel='stylesheet', href='/scripts/lib/bootstrap-sass/dist/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/scripts/lib/font-awesome/css/font-awesome.min.css')
-    link(rel='stylesheet', href='/scripts/lib/famous-angular/dist/famous-angular.css')
-    link(rel='stylesheet', content-type="text/css" href='/scripts/css/app.css')
-    body(ng-controller='sandflake')
-      block content
+    link(rel='stylesheet', href='/scripts/css/app.css')
 
-   
+    body
+      nav(class='navbar navbar-default navbar-fixed-top' role='navigation')
+       .container-fluid
+        a(href='/' id='menuLogo' class='navbar-brand')
+        ul(id='menu_list' class='nav navbar-nav')
 
-  script(src='/scripts/dist/h2o.min.js')
-  script(src='/scripts/lib/requirejs/require.js')
-  script
-    require.config({baseUrl: '/scripts/lib/'});
-  script(src='/scripts/lib/famous-angular/dist/famous-angular.js')
-  script(src='/scripts/directives.js')
-  script(src='/scripts/base/kudos.js')
-  script(src='/scripts/base/transform.js')
-  script(src='/scripts/factories.js')
-  script(src='/scripts/controllers/app.js')
-  script(src='/scripts/controllers/profile.js')
-  script(src='/scripts/controllers/root.js')
-  script(src='/scripts/controllers/c403.js')
-  script(src='/scripts/controllers/meat.js')
-  script(src='/scripts/controllers.js')
-  script(src='/scripts/app.js')
+
+    .contaner-fluid
+      .row
+       .col-xs-4
+       .col-xs-4
+         .panel
+          .panel-body
+            h3 Not found
+            p the url is not found on the server

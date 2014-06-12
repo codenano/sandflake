@@ -9,23 +9,23 @@ angular.module('sandflake.meat', []).
         $scope.room = $scope.idArray[1];
      else
         $scope.room = $scope.idArray[0];
-     $scope.$on('$routeChangeStart', function(event, current, previous, rejection) {
-      $('body, html').css({overflowY:'auto'});
-      $('.meatItem').each(function(){
-        $(this).removeClass('active');
-      });
-      $rootScope.socket.send(JSON.stringify({
-        type: 'room:leave',
-        room: $scope.roomId
-        }));
+        $scope.$on('$routeChangeStart', function(event, current, previous, rejection) {
+        $('.meatItem').each(function(){
+          $(this).removeClass('active');
+        });
+        $rootScope.socket.send(JSON.stringify({
+          type: 'room:leave',
+          room: $scope.roomId
+          }));
      });
      $scope.init = function(){
         $rootScope.socket.send(JSON.stringify({
                 type: 'room:join',
                 room: $scope.roomId
         }));
-        $('body, html').css({overflowY:'hidden'});
-        $('#meatMsgs').css({height: (window.innerHeight-420).toString()+'px', overflowY: 'scroll'});
+        $('#meatMsgs').css({height: window.innerHeight-170+'px', overflowY: 'scroll'});
+        if ($('#subnav').hasClass('in'))
+           $('.panel').css({marginRight: '11.3em'});
 /*        $('#meatmsg').focus(function(){
           $(this).css({height: '80px'});
         });*/

@@ -112,6 +112,8 @@ angular.module('sandflake.root', []).
         });
         $rootScope.loading();
         $('.panel').addClass('animated bounceInDown');
+        if ($('#subnav').hasClass('in'))
+           $('.panel').css({marginRight: '11.3em'});
 				};
      $scope.intervalLoad = setInterval(function(){
        if ($rootScope.state === 'start') {
